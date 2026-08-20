@@ -1,0 +1,1586 @@
+{
+  "version": "2.17",
+  "children": [
+    {
+      "type": "frame",
+      "id": "RYZVz",
+      "x": 0,
+      "y": 0,
+      "name": "Components",
+      "layout": "vertical",
+      "gap": 12,
+      "padding": 12,
+      "children": [
+        {
+          "type": "frame",
+          "id": "l9Fx3",
+          "name": "Button/Primary",
+          "reusable": true,
+          "fill": "$accent",
+          "cornerRadius": "$radius",
+          "gap": 6,
+          "padding": [
+            5,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "ajlMr",
+              "name": "Icon",
+              "width": 14,
+              "height": 14,
+              "icon": "plus",
+              "library": "lucide",
+              "fill": "$fgInv"
+            },
+            {
+              "type": "text",
+              "id": "m8RH4",
+              "name": "Label",
+              "fill": "$fgInv",
+              "content": "Primary",
+              "fontFamily": "$fontB",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "X0e85",
+          "name": "Button/Default",
+          "reusable": true,
+          "fill": "$surface",
+          "cornerRadius": "$radius",
+          "stroke": "$border",
+          "strokeWidth": 1,
+          "gap": 6,
+          "padding": [
+            5,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "uu9Gu",
+              "name": "Icon",
+              "width": 14,
+              "height": 14,
+              "icon": "copy",
+              "library": "lucide",
+              "fill": "$fg"
+            },
+            {
+              "type": "text",
+              "id": "waEaX",
+              "name": "Label",
+              "fill": "$fg",
+              "content": "Default",
+              "fontFamily": "$fontB",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Z82pr",
+          "name": "Nav/Default",
+          "reusable": true,
+          "width": 208,
+          "cornerRadius": "$radiusLG",
+          "gap": 10,
+          "padding": [
+            9,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "JHxqH",
+              "name": "Icon",
+              "width": 16,
+              "height": 16,
+              "icon": "layers",
+              "library": "lucide",
+              "fill": "#FFFFFFA6"
+            },
+            {
+              "type": "text",
+              "id": "vbpif",
+              "name": "Label",
+              "fill": "#FFFFFFA6",
+              "content": "Nav",
+              "fontFamily": "$fontB",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Z74ld",
+          "name": "Nav/Active",
+          "reusable": true,
+          "width": 208,
+          "fill": "$accent",
+          "cornerRadius": "$radiusLG",
+          "gap": 10,
+          "padding": [
+            9,
+            16
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "U8Xf1",
+              "name": "Icon",
+              "width": 16,
+              "height": 16,
+              "icon": "settings",
+              "library": "lucide",
+              "fill": "$fgInv"
+            },
+            {
+              "type": "text",
+              "id": "vdKLA",
+              "name": "Label",
+              "fill": "$fgInv",
+              "content": "Nav",
+              "fontFamily": "$fontB",
+              "fontSize": 14,
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "YOjmB",
+          "name": "Tag",
+          "reusable": true,
+          "fill": "$accentSoft",
+          "cornerRadius": 4,
+          "padding": [
+            1,
+            8
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "SRJcH",
+              "name": "Label",
+              "fill": "$accent",
+              "content": "tag",
+              "fontFamily": "$fontM",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "gEk5L",
+      "x": 0,
+      "y": 294,
+      "name": "Screen/全局配置",
+      "clip": true,
+      "width": 1440,
+      "height": 1180,
+      "fill": "$layout",
+      "children": [
+        {
+          "type": "frame",
+          "id": "l74fLO",
+          "name": "Sidebar",
+          "width": 240,
+          "height": "fill_container",
+          "fill": "$sider",
+          "layout": "vertical",
+          "padding": [
+            24,
+            16
+          ],
+          "justifyContent": "space_between",
+          "children": [
+            {
+              "type": "frame",
+              "id": "VjeUX",
+              "name": "SideTop",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "U4X5h",
+                  "name": "Brand",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ZszMX",
+                      "name": "PluginName",
+                      "fill": "$fgInv",
+                      "content": "scene-mock",
+                      "fontFamily": "$fontH",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "uVLXZ",
+                      "name": "PluginPath",
+                      "fill": "#FFFFFF73",
+                      "content": "/plugin.scene-mock/",
+                      "fontFamily": "$fontM",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "sPm41",
+                  "name": "Nav",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "id": "n1XwW",
+                      "type": "ref",
+                      "ref": "Z82pr",
+                      "name": "Nav Scenes",
+                      "width": "fill_container",
+                      "descendants": {
+                        "JHxqH": {
+                          "icon": "layers"
+                        },
+                        "vbpif": {
+                          "content": "Scene 管理"
+                        }
+                      }
+                    },
+                    {
+                      "id": "LP5zq",
+                      "type": "ref",
+                      "ref": "Z82pr",
+                      "name": "Nav Apis",
+                      "width": "fill_container",
+                      "descendants": {
+                        "JHxqH": {
+                          "icon": "braces"
+                        },
+                        "vbpif": {
+                          "content": "接口池"
+                        }
+                      }
+                    },
+                    {
+                      "id": "LCt24",
+                      "type": "ref",
+                      "ref": "Z74ld",
+                      "name": "Nav Config",
+                      "width": "fill_container",
+                      "descendants": {
+                        "U8Xf1": {
+                          "icon": "settings"
+                        },
+                        "vdKLA": {
+                          "content": "全局配置"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "M1VHBz",
+              "name": "SideFooter",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "padding": 12,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "j48dJ",
+                  "name": "WsLabel",
+                  "fill": "#FFFFFF73",
+                  "content": "工作区",
+                  "fontFamily": "$fontB",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "xyzKG",
+                  "name": "WsPath",
+                  "fill": "#FFFFFFA6",
+                  "content": "shop-web/mocks",
+                  "fontFamily": "$fontM",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "uMFrK",
+          "name": "Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "i5fhMJ",
+              "name": "PageHeader",
+              "width": "fill_container",
+              "fill": "$surface",
+              "stroke": "$line",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "layout": "vertical",
+              "gap": 4,
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Vc1tA",
+                  "name": "Hash",
+                  "fill": "$fg2",
+                  "content": "#/config",
+                  "fontFamily": "$fontM",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Bpqqy",
+                  "name": "Title",
+                  "fill": "$fg",
+                  "content": "全局配置",
+                  "fontFamily": "$fontH",
+                  "fontSize": 20,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "upwBK",
+                  "name": "Subtitle",
+                  "fill": "$fg2",
+                  "content": "工作区、透传与插件 rules.txt。切 Scene 不必改规则。",
+                  "fontFamily": "$fontB",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "x6ENv",
+              "name": "Body",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "qQR3H",
+                  "name": "工作区",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radiusLG",
+                  "stroke": "$line",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "mvFEW",
+                      "name": "CardHead",
+                      "width": "fill_container",
+                      "stroke": "$line",
+                      "strokeWidth": {
+                        "bottom": 1
+                      },
+                      "padding": [
+                        12,
+                        20
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "sCX6S",
+                          "name": "CardTitle",
+                          "fill": "$fg",
+                          "content": "工作区",
+                          "fontFamily": "$fontB",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "YAFkz",
+                      "name": "CardBody",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 20,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Vb3Zh",
+                          "name": "mocks 目录（绝对路径）",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 6,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "K0Ds81",
+                              "name": "FL",
+                              "fill": "$fg",
+                              "content": "mocks 目录（绝对路径）",
+                              "fontFamily": "$fontB",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "xzoMV",
+                              "name": "PathRow",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "a8CC2",
+                                  "name": "Input",
+                                  "width": "fill_container",
+                                  "height": 32,
+                                  "fill": "$surface",
+                                  "cornerRadius": "$radius",
+                                  "stroke": "$border",
+                                  "strokeWidth": 1,
+                                  "padding": [
+                                    0,
+                                    11
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "MuGFl",
+                                      "name": "Val",
+                                      "fill": "$fg",
+                                      "content": "/Users/dev/shop-web/mocks",
+                                      "fontFamily": "$fontM",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "id": "z7X2q5",
+                                  "type": "ref",
+                                  "ref": "l9Fx3",
+                                  "name": "Bind",
+                                  "descendants": {
+                                    "ajlMr": {
+                                      "icon": "folder-open"
+                                    },
+                                    "m8RH4": {
+                                      "content": "绑定"
+                                    }
+                                  }
+                                },
+                                {
+                                  "id": "b40EER",
+                                  "type": "ref",
+                                  "ref": "X0e85",
+                                  "name": "Init",
+                                  "descendants": {
+                                    "uu9Gu": {
+                                      "icon": "folder-plus"
+                                    },
+                                    "waEaX": {
+                                      "content": "初始化骨架"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "o1OXW",
+                  "name": "透传",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radiusLG",
+                  "stroke": "$line",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "W4UaM",
+                      "name": "CardHead",
+                      "width": "fill_container",
+                      "stroke": "$line",
+                      "strokeWidth": {
+                        "bottom": 1
+                      },
+                      "padding": [
+                        12,
+                        20
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "G6sSck",
+                          "name": "CardTitle",
+                          "fill": "$fg",
+                          "content": "透传",
+                          "fontFamily": "$fontB",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "nUhxM",
+                      "name": "CardBody",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 20,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "AsdTG",
+                          "name": "proxyTarget",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 6,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "n3iGt",
+                              "name": "FL",
+                              "fill": "$fg",
+                              "content": "proxyTarget",
+                              "fontFamily": "$fontB",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Kg2I3",
+                              "name": "PTInput",
+                              "width": "fill_container",
+                              "height": 32,
+                              "cornerRadius": "$radius",
+                              "stroke": "$border",
+                              "strokeWidth": 1,
+                              "padding": [
+                                0,
+                                11
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "WpakX",
+                                  "name": "PTVal",
+                                  "fill": "$fg2",
+                                  "content": "（空 = 未命中 req.passThrough 回源）",
+                                  "fontFamily": "$fontB",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "S8A2bi",
+                          "name": "unmatched",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 6,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "HZ07J",
+                              "name": "FL",
+                              "fill": "$fg",
+                              "content": "unmatched",
+                              "fontFamily": "$fontB",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Ekrbn",
+                              "name": "Radios",
+                              "gap": 24,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "Q68zIa",
+                                  "name": "passthrough · 回源",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ellipse",
+                                      "id": "hAnUa",
+                                      "name": "Dot",
+                                      "fill": "$surface",
+                                      "width": 16,
+                                      "height": 16,
+                                      "stroke": "$accent",
+                                      "strokeWidth": 5
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "LvMhm",
+                                      "name": "RL",
+                                      "fill": "$fg",
+                                      "content": "passthrough · 回源",
+                                      "fontFamily": "$fontB",
+                                      "fontSize": 14,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "T8NMI",
+                                  "name": "404 · 明确未 mock",
+                                  "gap": 8,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "ellipse",
+                                      "id": "wbZqt",
+                                      "name": "Dot",
+                                      "fill": "$surface",
+                                      "width": 16,
+                                      "height": 16,
+                                      "stroke": "$border",
+                                      "strokeWidth": 1
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "Guy63",
+                                      "name": "RL",
+                                      "fill": "$fg",
+                                      "content": "404 · 明确未 mock",
+                                      "fontFamily": "$fontB",
+                                      "fontSize": 14,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "mkdEo",
+                  "name": "匹配规则",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radiusLG",
+                  "stroke": "$line",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ezZzT",
+                      "name": "CardHead",
+                      "width": "fill_container",
+                      "stroke": "$line",
+                      "strokeWidth": {
+                        "bottom": 1
+                      },
+                      "padding": [
+                        12,
+                        20
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Sl8RX",
+                          "name": "CardTitle",
+                          "fill": "$fg",
+                          "content": "匹配规则",
+                          "fontFamily": "$fontB",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "nxJjg",
+                      "name": "CardBody",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 20,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "qa0W4",
+                          "name": "MPLabel",
+                          "fill": "$fg",
+                          "content": "matchPatterns · 写入插件 rules.txt，短协议 scene-mock://",
+                          "fontFamily": "$fontB",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "QjGXu",
+                          "name": "Patterns",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "id": "H64l1",
+                              "type": "ref",
+                              "ref": "YOjmB",
+                              "name": "Pat",
+                              "descendants": {
+                                "SRJcH": {
+                                  "content": "/api/"
+                                }
+                              }
+                            },
+                            {
+                              "id": "A2Lsjv",
+                              "type": "ref",
+                              "ref": "X0e85",
+                              "name": "AddPat",
+                              "descendants": {
+                                "uu9Gu": {
+                                  "icon": "plus"
+                                },
+                                "waEaX": {
+                                  "content": "添加 pattern"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "F9btS8",
+                          "name": "RulesInfo",
+                          "width": "fill_container",
+                          "fill": "$successSoft",
+                          "cornerRadius": "$radius",
+                          "gap": 8,
+                          "padding": [
+                            8,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "qWQ5c",
+                              "name": "OkI",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "circle-check",
+                              "library": "lucide",
+                              "fill": "$success"
+                            },
+                            {
+                              "type": "text",
+                              "id": "hCEUO",
+                              "name": "OkT",
+                              "fill": "$fg",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "插件已自动写入 rules.txt，一般不用再粘贴到界面 Rules。界面规则优先级更高。",
+                              "fontFamily": "$fontB",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "itjq5",
+                          "name": "RulesBlock",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "BBeCK",
+                              "name": "RBHead",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "xNHp2",
+                                  "name": "RBTitle",
+                                  "fill": "$fg2",
+                                  "content": "可复制规则",
+                                  "fontFamily": "$fontB",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "id": "rbRJ4",
+                                  "type": "ref",
+                                  "ref": "X0e85",
+                                  "name": "Copy",
+                                  "descendants": {
+                                    "uu9Gu": {
+                                      "icon": "copy"
+                                    },
+                                    "waEaX": {
+                                      "content": "复制"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "yNGAt",
+                              "name": "Pre",
+                              "width": "fill_container",
+                              "fill": "#141414",
+                              "cornerRadius": "$radius",
+                              "layout": "vertical",
+                              "gap": 4,
+                              "padding": 12,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "aVH3J",
+                                  "name": "code",
+                                  "fill": "#737373",
+                                  "content": "# scene-mock · 短协议才会进插件 server",
+                                  "fontFamily": "$fontM",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "UEH9X",
+                                  "name": "code",
+                                  "fill": "#737373",
+                                  "content": "# 插件禁用后立即失效",
+                                  "fontFamily": "$fontM",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "sxgGI",
+                                  "name": "code",
+                                  "fill": "#9CDCFE",
+                                  "content": "/api/ scene-mock://",
+                                  "fontFamily": "$fontM",
+                                  "fontSize": 12,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ehlic",
+                  "name": "运行时",
+                  "width": "fill_container",
+                  "fill": "$surface",
+                  "cornerRadius": "$radiusLG",
+                  "stroke": "$line",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "q7E86",
+                      "name": "CardHead",
+                      "width": "fill_container",
+                      "stroke": "$line",
+                      "strokeWidth": {
+                        "bottom": 1
+                      },
+                      "padding": [
+                        12,
+                        20
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "OMKbD",
+                          "name": "CardTitle",
+                          "fill": "$fg",
+                          "content": "运行时",
+                          "fontFamily": "$fontB",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "es1Zd",
+                      "name": "CardBody",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 20,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "A2W75A",
+                          "name": "ASLabel",
+                          "fill": "$fg",
+                          "content": "当前激活 Scene",
+                          "fontFamily": "$fontB",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "mBr9g",
+                          "name": "ActiveTags",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "k4RD63",
+                              "type": "ref",
+                              "ref": "YOjmB",
+                              "name": "T1",
+                              "descendants": {
+                                "SRJcH": {
+                                  "content": "normal-order"
+                                }
+                              }
+                            },
+                            {
+                              "id": "WbVhF",
+                              "type": "ref",
+                              "ref": "YOjmB",
+                              "name": "T2",
+                              "descendants": {
+                                "SRJcH": {
+                                  "content": "login-flow"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "dBcb5",
+                          "name": "HttpsAlert",
+                          "width": "fill_container",
+                          "fill": "$warnSoft",
+                          "cornerRadius": "$radius",
+                          "gap": 8,
+                          "padding": [
+                            8,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "VDtuk",
+                              "name": "HI",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "shield-alert",
+                              "library": "lucide",
+                              "fill": "$warn"
+                            },
+                            {
+                              "type": "text",
+                              "id": "GiIsX",
+                              "name": "HT",
+                              "fill": "$fg",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "请开启 Whistle HTTPS 抓包，否则插件只能看到 CONNECT，无法按 path mock。",
+                              "fontFamily": "$fontB",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "h0gTqn",
+                          "name": "HotError",
+                          "width": "fill_container",
+                          "fill": "$dangerSoft",
+                          "cornerRadius": "$radius",
+                          "gap": 8,
+                          "padding": [
+                            8,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "cFQPY",
+                              "name": "EI",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "circle-x",
+                              "library": "lucide",
+                              "fill": "$danger"
+                            },
+                            {
+                              "type": "text",
+                              "id": "mVKzp",
+                              "name": "ET",
+                              "fill": "$fg",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "热加载：scenes/order-error/responses/create-order.json  JSON 语法错误，已保留上一份合法内容。",
+                              "fontFamily": "$fontB",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Rj5it",
+      "x": 1520,
+      "y": 294,
+      "name": "Screen/未绑定工作区",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$layout",
+      "children": [
+        {
+          "type": "frame",
+          "id": "y2P8X",
+          "name": "Sidebar",
+          "width": 240,
+          "height": "fill_container",
+          "fill": "$sider",
+          "layout": "vertical",
+          "padding": [
+            24,
+            16
+          ],
+          "justifyContent": "space_between",
+          "children": [
+            {
+              "type": "frame",
+              "id": "oqUsX",
+              "name": "SideTop",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "hzeTA",
+                  "name": "Brand",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "WOBn3",
+                      "name": "PluginName",
+                      "fill": "$fgInv",
+                      "content": "scene-mock",
+                      "fontFamily": "$fontH",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "fYvVI",
+                      "name": "PluginPath",
+                      "fill": "#FFFFFF73",
+                      "content": "/plugin.scene-mock/",
+                      "fontFamily": "$fontM",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "suuF1",
+                  "name": "Nav",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "id": "jcU7A",
+                      "type": "ref",
+                      "ref": "Z82pr",
+                      "name": "Nav Scenes",
+                      "width": "fill_container",
+                      "descendants": {
+                        "JHxqH": {
+                          "icon": "layers"
+                        },
+                        "vbpif": {
+                          "content": "Scene 管理"
+                        }
+                      }
+                    },
+                    {
+                      "id": "sn4Kx",
+                      "type": "ref",
+                      "ref": "Z82pr",
+                      "name": "Nav Apis",
+                      "width": "fill_container",
+                      "descendants": {
+                        "JHxqH": {
+                          "icon": "braces"
+                        },
+                        "vbpif": {
+                          "content": "接口池"
+                        }
+                      }
+                    },
+                    {
+                      "id": "Y8UFv4",
+                      "type": "ref",
+                      "ref": "Z74ld",
+                      "name": "Nav Config",
+                      "width": "fill_container",
+                      "descendants": {
+                        "U8Xf1": {
+                          "icon": "settings"
+                        },
+                        "vdKLA": {
+                          "content": "全局配置"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "z4Cl3y",
+              "name": "SideFooter",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "padding": 12,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "p1acC",
+                  "name": "WsLabel",
+                  "fill": "#FFFFFF73",
+                  "content": "工作区",
+                  "fontFamily": "$fontB",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "Qzvf5",
+                  "name": "WsPath",
+                  "fill": "#FFFFFFA6",
+                  "content": "未绑定",
+                  "fontFamily": "$fontM",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "C03WL",
+          "name": "Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "gnuL2",
+              "name": "PageHeader",
+              "width": "fill_container",
+              "fill": "$surface",
+              "stroke": "$line",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "layout": "vertical",
+              "gap": 4,
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "d5Gtha",
+                  "name": "Hash",
+                  "fill": "$fg2",
+                  "content": "#/config",
+                  "fontFamily": "$fontM",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "o47Xux",
+                  "name": "Title",
+                  "fill": "$fg",
+                  "content": "绑定工作区",
+                  "fontFamily": "$fontH",
+                  "fontSize": 20,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "BFJhk",
+                  "name": "Subtitle",
+                  "fill": "$fg2",
+                  "content": "mock JSON 保存在项目 mocks/ 目录，插件不会把数据写进安装目录。",
+                  "fontFamily": "$fontB",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "S320ur",
+              "name": "Body",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "padding": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Adaqt",
+                  "name": "EmptyResult",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ybC4u",
+                      "name": "EmptyIcon",
+                      "width": 72,
+                      "height": 72,
+                      "fill": "$muted",
+                      "cornerRadius": 36,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "uRaCW",
+                          "name": "Folder",
+                          "width": 32,
+                          "height": 32,
+                          "icon": "folder-search",
+                          "library": "lucide",
+                          "fill": "$fg2"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "d3e1pu",
+                      "name": "EmptyTitle",
+                      "fill": "$fg",
+                      "content": "尚未绑定工作区",
+                      "fontFamily": "$fontH",
+                      "fontSize": 20,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "A7QkP",
+                      "name": "EmptyDesc",
+                      "fill": "$fg2",
+                      "textGrowth": "fixed-width",
+                      "width": 480,
+                      "content": "选择业务仓库下的 mocks/ 目录后才会劫持请求。未绑定前，即使界面 Rules 写了 scene-mock:// 也会 passThrough。",
+                      "textAlign": "center",
+                      "fontFamily": "$fontB",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "hXQly",
+                      "name": "BindRow",
+                      "width": 480,
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "JiZU1",
+                          "name": "Input",
+                          "width": "fill_container",
+                          "height": 32,
+                          "fill": "$surface",
+                          "cornerRadius": "$radius",
+                          "stroke": "$border",
+                          "strokeWidth": 1,
+                          "padding": [
+                            0,
+                            11
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "H7WzG5",
+                              "name": "Ph",
+                              "fill": "$fg2",
+                              "content": "/absolute/path/to/project/mocks",
+                              "fontFamily": "$fontM",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "id": "uoOTy",
+                          "type": "ref",
+                          "ref": "l9Fx3",
+                          "name": "BindBtn",
+                          "descendants": {
+                            "ajlMr": {
+                              "icon": "link"
+                            },
+                            "m8RH4": {
+                              "content": "绑定"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "a1EVA9",
+                      "type": "ref",
+                      "ref": "X0e85",
+                      "name": "InitBtn",
+                      "descendants": {
+                        "uu9Gu": {
+                          "icon": "folder-plus"
+                        },
+                        "waEaX": {
+                          "content": "初始化 mocks 骨架"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "clx8C",
+      "x": 811.9841883043545,
+      "y": 56.485577044672766,
+      "fill": "#000000",
+      "content": "{\n    \"msg\": \"请重新登录\",\n    \"status\": \"0001\",\n    \"success\": false\n}",
+      "fontFamily": "Inter",
+      "fontSize": 12,
+      "fontWeight": "normal"
+    }
+  ],
+  "variables": {
+    "surface": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "layout": {
+      "type": "color",
+      "value": "#F5F5F5"
+    },
+    "sider": {
+      "type": "color",
+      "value": "#001529"
+    },
+    "headerBg": {
+      "type": "color",
+      "value": "#FAFAFA"
+    },
+    "fg": {
+      "type": "color",
+      "value": "#262626"
+    },
+    "fg2": {
+      "type": "color",
+      "value": "#8C8C8C"
+    },
+    "fgInv": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "border": {
+      "type": "color",
+      "value": "#D9D9D9"
+    },
+    "line": {
+      "type": "color",
+      "value": "#F0F0F0"
+    },
+    "muted": {
+      "type": "color",
+      "value": "#F5F5F5"
+    },
+    "accent": {
+      "type": "color",
+      "value": "#1677FF"
+    },
+    "accentSoft": {
+      "type": "color",
+      "value": "#E6F4FF"
+    },
+    "success": {
+      "type": "color",
+      "value": "#52C41A"
+    },
+    "successSoft": {
+      "type": "color",
+      "value": "#F6FFED"
+    },
+    "warn": {
+      "type": "color",
+      "value": "#FAAD14"
+    },
+    "warnSoft": {
+      "type": "color",
+      "value": "#FFFBE6"
+    },
+    "danger": {
+      "type": "color",
+      "value": "#FF4D4F"
+    },
+    "dangerSoft": {
+      "type": "color",
+      "value": "#FFF2F0"
+    },
+    "inverse": {
+      "type": "color",
+      "value": "#001529"
+    },
+    "fontH": {
+      "type": "string",
+      "value": "Inter"
+    },
+    "fontB": {
+      "type": "string",
+      "value": "Inter"
+    },
+    "fontM": {
+      "type": "string",
+      "value": "IBM Plex Mono"
+    },
+    "radius": {
+      "type": "number",
+      "value": 6
+    },
+    "radiusLG": {
+      "type": "number",
+      "value": 8
+    }
+  },
+  "fileToken": "8c6c4104-ce12-4a96-a361-32ac7346ba56"
+}
