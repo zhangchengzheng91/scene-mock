@@ -1,0 +1,10 @@
+{
+  "name": "空数据联调",
+  "desc": "订单列表为空",
+  "apis": {
+    "get-orders": {
+      "status": 200,
+      "data": "empty"
+    }
+  }
+}

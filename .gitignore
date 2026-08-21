@@ -1,3 +1,47 @@
+# Dependencies
 node_modules/
+
+# Build outputs (tsc → /dist, Vite → web/dist)
+dist/
+*.tsbuildinfo
+
+# Logs
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+
+# OS
 .DS_Store
+Thumbs.db
+
+# IDE / editor
+.idea/
+.vscode/
+.history/
+*.swp
+*.swo
+*~
+
+# Atomic write leftovers (see src/core/fs-utils.ts)
+*.tmp
+
+# npm pack
+*.tgz
+
+# Vite cache
+.vite/
+
+# Optional REPL history
+.node_repl_history

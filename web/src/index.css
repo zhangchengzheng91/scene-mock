@@ -1,0 +1,51 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #f5f7fa;
+}
+
+.app-shell {
+  min-height: 100%;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-inline: 20px !important;
+}
+
+.app-logo {
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.app-header .ant-menu {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+}
+
+.app-reload {
+  color: rgba(255, 255, 255, 0.85) !important;
+  flex-shrink: 0;
+}
+
+.app-reload:hover {
+  color: #fff !important;
+}
+
+.app-content {
+  padding: 16px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

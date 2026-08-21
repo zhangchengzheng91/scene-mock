@@ -1,0 +1,19 @@
+{
+  "name": "正常下单",
+  "desc": "正常下单流程的接口返回值组合",
+  "apis": {
+    "get-orders": {
+      "status": 200,
+      "delay": 0,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "data": "list"
+    },
+    "create-order": {
+      "status": 201,
+      "delay": 0,
+      "data": "success"
+    }
+  }
+}

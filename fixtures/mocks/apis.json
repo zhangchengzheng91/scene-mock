@@ -1,0 +1,20 @@
+[
+  {
+    "id": "get-orders",
+    "method": "GET",
+    "url": "/api/orders",
+    "desc": "订单列表"
+  },
+  {
+    "id": "create-order",
+    "method": "POST",
+    "url": "/api/orders",
+    "desc": "创建订单"
+  },
+  {
+    "id": "get-user",
+    "method": "GET",
+    "url": "/api/users/:id",
+    "desc": "用户详情"
+  }
+]

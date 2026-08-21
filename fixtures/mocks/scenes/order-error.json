@@ -1,0 +1,14 @@
+{
+  "name": "下单异常流",
+  "desc": "库存不足 / 校验失败",
+  "apis": {
+    "get-orders": {
+      "status": 200,
+      "data": "list"
+    },
+    "create-order": {
+      "status": 400,
+      "data": "validation-error"
+    }
+  }
+}
