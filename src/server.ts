@@ -1,6 +1,6 @@
 import { IncomingMessage } from 'http';
 import { headerOf, normalizeHeaders } from './core/normalize';
-import { pathnameOf, searchOf } from './core/matcher';
+import { candidatePathnames, inferHttpMethod, pathnameOf, searchOf } from './core/matcher';
 import { initContext } from './context';
 
 const HOP_BY_HOP = new Set([
@@ -50,15 +50,39 @@ async function handleHttp(
   res: Whistle.PluginServerResponse,
   ctx: ReturnType<typeof initContext>,
 ) {
+  await ctx.ensureBound();
   const { store } = ctx;
   if (!store.ready || store.pendingConflict) {
     req.passThrough();
     return;
   }
 
-  const method = req.originalReq.method || req.method || 'GET';
-  const pathname = pathnameOf(req.fullUrl || req.originalReq.fullUrl);
-  const hit = store.routes.match(method, pathname);
+  const mergedHeaders = {
+    ...req.originalReq.headers,
+    ...req.headers,
+  };
+  const method = inferHttpMethod({
+    method: req.method,
+    originalMethod: req.originalReq.method,
+    headers: mergedHeaders,
+  });
+  const pathnames = candidatePathnames({
+    fullUrl: req.fullUrl,
+    originalFullUrl: req.originalReq.fullUrl,
+    url: req.url,
+    originalUrl: req.originalReq.url,
+    relativeUrl: req.originalReq.relativeUrl,
+    realUrl: req.originalReq.realUrl,
+    extraUrl: req.originalReq.extraUrl,
+    headers: mergedHeaders,
+  });
+  let hit = null;
+  for (const pathname of pathnames) {
+    hit = store.routes.match(method, pathname);
+    if (hit) {
+      break;
+    }
+  }
 
   if (hit) {
     await drain(req);
@@ -139,8 +163,9 @@ function proxyTo(
     };
     try {
       const target = new URL(proxyTarget);
-      const pathname = pathnameOf(req.fullUrl || req.originalReq.fullUrl);
-      const search = searchOf(req.fullUrl || req.originalReq.fullUrl);
+      const originalUrl = req.originalReq.fullUrl || req.fullUrl;
+      const pathname = pathnameOf(originalUrl);
+      const search = searchOf(originalUrl);
       const url = `${target.origin}${pathname}${search}`;
       const headers: Record<string, string | string[] | undefined> = {
         ...req.headers,

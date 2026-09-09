@@ -15,8 +15,8 @@ import {
   message,
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
+import SceneDetailPage from './SceneDetailPage';
 import { ConflictPayload, SceneListItem, Status, isApiError } from '../types';
 
 export default function ScenesPage({
@@ -33,7 +33,7 @@ export default function ScenesPage({
   const [open, setOpen] = useState(false);
   const [copyFrom, setCopyFrom] = useState<SceneListItem | null>(null);
   const [form, setForm] = useState({ id: '', name: '', desc: '' });
-  const nav = useNavigate();
+  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
   const load = () => {
     api.scenes().then(setScenes).catch((err) => {
@@ -61,12 +61,8 @@ export default function ScenesPage({
 
   const toggle = async (scene: SceneListItem, checked: boolean) => {
     try {
-      if (checked) {
-        await api.activate(scene.id);
-        message.success(`已激活 ${scene.name}`);
-      } else {
-        await api.deactivate(scene.id);
-      }
+      await api.setSceneProxies(scene.id, checked);
+      message.success(checked ? `已激活 ${scene.name} 全部代理` : `已关闭 ${scene.name} 全部代理`);
       refresh();
       load();
     } catch (err) {
@@ -145,28 +141,46 @@ export default function ScenesPage({
         size="middle"
         dataSource={filtered}
         pagination={false}
+        expandable={{
+          expandedRowKeys: expandedKeys,
+          onExpandedRowsChange: (keys) => setExpandedKeys(keys.map(String)),
+          expandRowByClick: true,
+          expandedRowClassName: 'scene-expand-row',
+          expandedRowRender: (row) => (
+            <SceneDetailPage id={row.id} refresh={refresh} onConflict={onConflict} />
+          ),
+        }}
         columns={[
           {
             title: '名称',
             dataIndex: 'name',
+            width: 110,
             render: (name, row) => (
-              <Link to={`/scenes/${row.id}`}>
+              <span>
                 <Typography.Text strong>{name}</Typography.Text>
                 <div>
                   <Typography.Text type="secondary">{row.id}</Typography.Text>
                 </div>
-              </Link>
+              </span>
             ),
           },
-          { title: '接口数', dataIndex: 'apiCount', width: 90 },
+          {
+            title: '接口',
+            width: 110,
+            render: (_, row) => `${row.active ? row.enabledCount : 0}/${row.apiCount}`,
+          },
           {
             title: '激活',
             width: 100,
             render: (_, row) => (
-              <Switch
-                checked={row.active}
-                onChange={(checked) => toggle(row, checked)}
-              />
+              <span onClick={(e) => e.stopPropagation()}>
+                <Switch
+                  checked={row.apiCount === 0
+                    ? row.active
+                    : row.active && row.enabledCount > 0}
+                  onChange={(checked) => toggle(row, checked)}
+                />
+              </span>
             ),
           },
           {
@@ -177,10 +191,9 @@ export default function ScenesPage({
           },
           {
             title: '操作',
-            width: 180,
+            width: 140,
             render: (_, row) => (
-              <Space>
-                <Button size="small" onClick={() => nav(`/scenes/${row.id}`)}>详情</Button>
+              <Space onClick={(e) => e.stopPropagation()}>
                 <Button size="small" onClick={() => {
                   setCopyFrom(row);
                   setForm({
@@ -200,6 +213,7 @@ export default function ScenesPage({
                       } else {
                         message.success('已删除');
                       }
+                      setExpandedKeys((keys) => keys.filter((k) => k !== row.id));
                       refresh();
                       load();
                     } catch (err) {

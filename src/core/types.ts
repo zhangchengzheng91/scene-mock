@@ -12,6 +12,16 @@ export interface SceneApiEntry {
   delay?: number;
   headers?: Record<string, string>;
   data: string;
+  /** 缺省为 true，兼容旧 Scene 文件 */
+  enabled?: boolean;
+  /** 仅展示，不参与匹配 */
+  keyword?: string;
+  /** 仅展示，不参与匹配 */
+  describe?: string;
+}
+
+export function isEntryEnabled(entry?: SceneApiEntry | null): boolean {
+  return Boolean(entry) && entry!.enabled !== false;
 }
 
 export interface SceneDef {

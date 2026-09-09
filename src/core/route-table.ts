@@ -4,6 +4,7 @@ import {
   AmbiguousRoute,
   ApiDef,
   CompiledRoute,
+  isEntryEnabled,
   SceneDef,
 } from './types';
 import { DataIndex } from './conflict';
@@ -38,7 +39,7 @@ export class RouteTable {
         continue;
       }
       for (const [apiId, entry] of Object.entries(scene.apis || {})) {
-        if (!entry || !entry.data) {
+        if (!entry || !entry.data || !isEntryEnabled(entry)) {
           continue;
         }
         const variants = input.dataIndex.get(apiId);

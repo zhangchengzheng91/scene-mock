@@ -94,4 +94,25 @@ describe('route-table', () => {
     assert.equal(table.ambiguous.length, 1);
     assert.deepEqual(table.ambiguous[0].apiIds.sort(), ['get-user', 'get-user-alias']);
   });
+
+  it('skips disabled entries', () => {
+    const scenes = new Map<string, SceneDef>([
+      ['a', {
+        id: 'a',
+        name: 'A',
+        apis: {
+          'get-orders': { data: 'list', enabled: false },
+          'create-order': { data: 'ok' },
+        },
+      }],
+    ]);
+    const dataIndex = new Map([
+      ['get-orders', new Map<string, unknown>([['list', {}]])],
+      ['create-order', new Map<string, unknown>([['ok', {}]])],
+    ]);
+    const table = new RouteTable();
+    table.compile({ apis, scenes, activeScenes: ['a'], dataIndex });
+    assert.equal(table.match('GET', '/api/orders'), null);
+    assert.ok(table.match('POST', '/api/orders'));
+  });
 });

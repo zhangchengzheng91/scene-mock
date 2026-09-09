@@ -10,17 +10,19 @@ body {
 }
 
 .app-shell {
+  height: 100%;
   min-height: 100%;
 }
 
-.app-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding-inline: 20px !important;
+.app-sider {
+  overflow: auto;
 }
 
 .app-logo {
+  display: flex;
+  align-items: center;
+  height: 64px;
+  padding-inline: 24px;
   color: #fff !important;
   font-weight: 600;
   font-size: 15px;
@@ -28,24 +30,61 @@ body {
   white-space: nowrap;
 }
 
-.app-header .ant-menu {
-  flex: 1;
+.app-main {
   min-width: 0;
-  background: transparent;
+  height: 100%;
 }
 
-.app-reload {
-  color: rgba(255, 255, 255, 0.85) !important;
-  flex-shrink: 0;
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding-inline: 20px !important;
+  background: #fff !important;
+  border-bottom: 1px solid #f0f0f0;
+  line-height: 64px;
 }
 
-.app-reload:hover {
-  color: #fff !important;
+.app-header-title {
+  margin: 0 !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 64px !important;
 }
 
 .app-content {
   padding: 16px 20px 24px;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.scene-expand {
+  margin: 0;
+}
+
+.scene-expand-row > td {
+  padding-inline-start: 8px !important;
+}
+
+.scene-expand .ant-table {
+  margin-inline: 0 !important;
+}
+
+.scene-api-table .ant-table-thead > tr > th:first-child,
+.scene-api-table .ant-table-tbody > tr > td:first-child {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  padding-inline: 8px;
+}
+
+.scene-api-table .ant-table-tbody > tr > td {
+  vertical-align: top;
+}
+
+.scene-api-table .ant-table-tbody > tr > td:nth-child(5) {
+  min-width: 220px;
 }

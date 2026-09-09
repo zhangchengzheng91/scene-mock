@@ -3,8 +3,8 @@ import { HttpError } from './core/http-error';
 import { Store } from './core/store';
 import { writePluginRules } from './rules';
 import { SseHub } from './uiServer/sse';
+import { persistMocksRoot, readSavedMocksRoot } from './workspace-state';
 
-const STORAGE_KEY = 'mocksRoot';
 const RECENT_KEY = 'recentMocksRoots';
 
 export function resolveMocksRoot(input: string): string {
@@ -23,6 +23,7 @@ export class AppContext {
   readonly store = new Store();
   readonly sse = new SseHub();
   private lastPatterns = '';
+  private inflightBind: Promise<void> | null = null;
 
   constructor(public options: Whistle.PluginOptions) {
     this.store.on('change', () => {
@@ -38,20 +39,41 @@ export class AppContext {
     this.store.on('conflict', (payload) => {
       this.sse.send('conflict', payload);
     });
-    const saved = this.options.localStorage.getProperty(STORAGE_KEY);
-    if (saved) {
-      this.store.bind(saved).catch((err) => {
-        console.error('[scene-mock] bind saved workspace failed:', err);
-      });
-    } else {
-      this.syncRules();
+    this.ensureBound().finally(() => {
+      if (!this.store.mocksRoot) {
+        this.syncRules();
+      }
+    });
+  }
+
+  /** server / uiServer 可能不共享内存；请求前从磁盘 / Storage 再绑一次。 */
+  ensureBound(): Promise<void> {
+    const saved = readSavedMocksRoot(this.options);
+    if (!saved) {
+      return Promise.resolve();
     }
+    persistMocksRoot(this.options, saved);
+    const resolved = path.resolve(saved);
+    if (this.store.ready && this.store.mocksRoot === resolved) {
+      return Promise.resolve();
+    }
+    if (this.inflightBind) {
+      return this.inflightBind;
+    }
+    this.inflightBind = this.store.bind(resolved)
+      .catch((err) => {
+        console.error('[scene-mock] bind workspace failed:', err);
+      })
+      .finally(() => {
+        this.inflightBind = null;
+      });
+    return this.inflightBind;
   }
 
   async bindWorkspace(input: string) {
     const mocksRoot = resolveMocksRoot(input);
     await this.store.bind(mocksRoot);
-    this.options.localStorage.setProperty(STORAGE_KEY, mocksRoot);
+    persistMocksRoot(this.options, mocksRoot);
     this.pushRecent(mocksRoot);
     this.syncRules();
     return this.workspaceView();

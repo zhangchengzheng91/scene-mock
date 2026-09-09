@@ -42,6 +42,7 @@ export interface SceneListItem {
   name: string;
   desc?: string;
   apiCount: number;
+  enabledCount: number;
   active: boolean;
   mtimeMs: number;
 }
@@ -60,6 +61,9 @@ export interface SceneEntryView {
   usedBy: string[];
   missing: boolean;
   unset: boolean;
+  enabled: boolean;
+  keyword: string;
+  describe: string;
 }
 
 export interface SceneDetail {

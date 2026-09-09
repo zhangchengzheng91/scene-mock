@@ -18,6 +18,7 @@ import {
   AppConfig,
   DEFAULT_CONFIG,
   FileError,
+  isEntryEnabled,
   SceneApiEntry,
   SceneConflictPayload,
   SceneDef,
@@ -28,6 +29,7 @@ export interface SceneListItem {
   name: string;
   desc?: string;
   apiCount: number;
+  enabledCount: number;
   active: boolean;
   mtimeMs: number;
 }
@@ -46,6 +48,9 @@ export interface SceneEntryView {
   usedBy: string[];
   missing: boolean;
   unset: boolean;
+  enabled: boolean;
+  keyword: string;
+  describe: string;
 }
 
 export interface VariantView {
@@ -78,6 +83,11 @@ export class Store extends EventEmitter {
   private apisLoaded = false;
   private configLoaded = false;
   pendingConflict: SceneConflictPayload | ActiveSetConflictPayload | null = null;
+  private pendingEnable: {
+    sceneId: string;
+    enableApiIds: string[];
+    isolateOthers: boolean;
+  } | null = null;
   readonly routes = new RouteTable();
   private watcher: Watcher | null = null;
   private extraWatchers: Watcher[] = [];
@@ -141,6 +151,7 @@ export class Store extends EventEmitter {
     this.apisLoaded = false;
     this.configLoaded = false;
     this.pendingConflict = null;
+    this.pendingEnable = null;
     this.routes.clear();
   }
 
@@ -189,14 +200,18 @@ export class Store extends EventEmitter {
   listScenes(): SceneListItem[] {
     const active = new Set(this.config.activeScenes);
     return [...this.scenes.values()]
-      .map((scene) => ({
-        id: scene.id,
-        name: scene.name,
-        desc: scene.desc,
-        apiCount: Object.keys(scene.apis || {}).length,
-        active: active.has(scene.id),
-        mtimeMs: scene.mtimeMs || 0,
-      }))
+      .map((scene) => {
+        const apis = Object.values(scene.apis || {});
+        return {
+          id: scene.id,
+          name: scene.name,
+          desc: scene.desc,
+          apiCount: apis.length,
+          enabledCount: apis.filter((entry) => isEntryEnabled(entry)).length,
+          active: active.has(scene.id),
+          mtimeMs: scene.mtimeMs || 0,
+        };
+      })
       .sort((a, b) => a.name.localeCompare(b.name, 'zh'));
   }
 
@@ -246,6 +261,9 @@ export class Store extends EventEmitter {
         usedBy,
         missing,
         unset,
+        enabled: isEntryEnabled(entry),
+        keyword: entry?.keyword || '',
+        describe: entry?.describe || '',
       };
     });
     return {
@@ -467,12 +485,16 @@ export class Store extends EventEmitter {
       headers?: Record<string, string>;
       data?: string;
       body?: unknown;
+      enabled?: boolean;
+      keyword?: string;
+      describe?: string;
     },
   ) {
     return this.enqueue(async () => {
       this.ensureReady();
       const scene = this.requireScene(sceneId);
       this.requireApi(apiId);
+      const existed = Boolean(scene.apis[apiId]);
       const current = scene.apis[apiId] || { data: '' };
       let variant = patch.data || current.data;
       let forked = false;
@@ -495,16 +517,113 @@ export class Store extends EventEmitter {
         variant = nextVariantName(this.variantNames(apiId), sceneId);
         await this.writeDataFile(apiId, variant, {});
       }
-      scene.apis[apiId] = sanitizeEntry({
+      const next = sanitizeEntry({
         status: patch.status !== undefined ? patch.status : current.status,
         delay: patch.delay !== undefined ? patch.delay : current.delay,
         headers: patch.headers !== undefined ? patch.headers : current.headers,
         data: variant,
+        enabled: patch.enabled !== undefined
+          ? patch.enabled
+          : (existed ? current.enabled : false),
+        keyword: patch.keyword !== undefined ? patch.keyword : current.keyword,
+        describe: patch.describe !== undefined ? patch.describe : current.describe,
       });
+      if (patch.enabled === true) {
+        const isolate = !this.config.activeScenes.includes(sceneId);
+        const previewApis: Record<string, SceneApiEntry> = {};
+        for (const [id, entry] of Object.entries(scene.apis || {})) {
+          previewApis[id] = isolate && id !== apiId
+            ? sanitizeEntry({ ...entry, enabled: false })
+            : (id === apiId ? next : entry);
+        }
+        previewApis[apiId] = next;
+        const conflict = detectActivateConflict(
+          { ...scene, apis: previewApis },
+          this.config.activeScenes,
+          this.scenes,
+          this.getApiMap(),
+          this.dataIndex,
+        );
+        if (conflict) {
+          this.pendingEnable = {
+            sceneId,
+            enableApiIds: [apiId],
+            isolateOthers: isolate,
+          };
+          throw new HttpError(409, 'scene_conflict', '与已激活 Scene 存在接口重合', conflict);
+        }
+        if (isolate) {
+          scene.apis = previewApis;
+        } else {
+          scene.apis[apiId] = next;
+        }
+        if (!this.config.activeScenes.includes(sceneId)) {
+          this.config.activeScenes = [...this.config.activeScenes, sceneId];
+          await this.writeJson(this.configFile(), this.config);
+        }
+      } else {
+        scene.apis[apiId] = next;
+        if (
+          patch.enabled === false
+          && !Object.values(scene.apis).some((entry) => isEntryEnabled(entry))
+        ) {
+          this.config.activeScenes = this.config.activeScenes.filter((id) => id !== sceneId);
+          await this.writeJson(this.configFile(), this.config);
+        }
+      }
       await this.writeSceneFile(scene);
       this.rebuild();
       this.emitChange();
       return { forked, variant, entry: this.getSceneDetail(sceneId) };
+    });
+  }
+
+  async setSceneApisEnabled(sceneId: string, enabled: boolean) {
+    return this.enqueue(async () => {
+      this.ensureReady();
+      const scene = this.requireScene(sceneId);
+      if (enabled) {
+        const preview: SceneDef = {
+          ...scene,
+          apis: Object.fromEntries(
+            Object.entries(scene.apis || {}).map(([apiId, entry]) => [
+              apiId,
+              sanitizeEntry({ ...entry, enabled: true }),
+            ]),
+          ),
+        };
+        const conflict = detectActivateConflict(
+          preview,
+          this.config.activeScenes,
+          this.scenes,
+          this.getApiMap(),
+          this.dataIndex,
+        );
+        if (conflict) {
+          this.pendingEnable = {
+            sceneId,
+            enableApiIds: Object.keys(scene.apis || {}),
+            isolateOthers: false,
+          };
+          throw new HttpError(409, 'scene_conflict', '与已激活 Scene 存在接口重合', conflict);
+        }
+        if (!this.config.activeScenes.includes(sceneId)) {
+          this.config.activeScenes = [...this.config.activeScenes, sceneId];
+          await this.writeJson(this.configFile(), this.config);
+        }
+      }
+      for (const apiId of Object.keys(scene.apis || {})) {
+        scene.apis[apiId] = sanitizeEntry({ ...scene.apis[apiId], enabled });
+      }
+      await this.writeSceneFile(scene);
+      if (!enabled) {
+        this.config.activeScenes = this.config.activeScenes.filter((id) => id !== sceneId);
+        await this.writeJson(this.configFile(), this.config);
+      }
+      this.pendingConflict = null;
+      this.rebuild();
+      this.emitChange();
+      return this.getSceneDetail(sceneId);
     });
   }
 
@@ -645,6 +764,7 @@ export class Store extends EventEmitter {
     return this.enqueue(async () => {
       this.ensureReady();
       if (input.action === 'keep-old') {
+        this.pendingEnable = null;
         return { ok: true as const, activeScenes: this.config.activeScenes };
       }
       if (input.action === 'replace') {
@@ -653,6 +773,7 @@ export class Store extends EventEmitter {
         this.config.activeScenes = list;
         await this.writeJson(this.configFile(), this.config);
         this.pendingConflict = null;
+        this.pendingEnable = null;
         this.rebuild();
         this.emitChange();
         return { ok: true as const, activeScenes: this.config.activeScenes };
@@ -661,6 +782,20 @@ export class Store extends EventEmitter {
         throw new HttpError(400, 'invalid', 'keep-new 需要 sceneId');
       }
       const scene = this.requireScene(input.sceneId);
+      const pending = this.pendingEnable;
+      this.pendingEnable = null;
+      if (pending && pending.sceneId === input.sceneId) {
+        for (const apiId of Object.keys(scene.apis || {})) {
+          const on = pending.enableApiIds.includes(apiId);
+          if (pending.isolateOthers || on) {
+            scene.apis[apiId] = sanitizeEntry({
+              ...scene.apis[apiId],
+              enabled: on,
+            });
+          }
+        }
+        await this.writeSceneFile(scene);
+      }
       const conflict = detectActivateConflict(
         scene,
         this.config.activeScenes,
@@ -1202,7 +1337,10 @@ function normalizeApi(input: Partial<ApiDef> & { id?: string }): ApiDef {
 }
 
 function sanitizeEntry(entry: SceneApiEntry): SceneApiEntry {
-  const out: SceneApiEntry = { data: String(entry?.data || '') };
+  const out: SceneApiEntry = {
+    data: String(entry?.data || ''),
+    enabled: entry?.enabled !== false,
+  };
   if (entry?.status !== undefined) {
     out.status = normalizeStatus(entry.status);
   }
@@ -1211,6 +1349,14 @@ function sanitizeEntry(entry: SceneApiEntry): SceneApiEntry {
   }
   if (entry?.headers) {
     out.headers = normalizeHeaders(entry.headers);
+  }
+  const keyword = String(entry?.keyword || '').trim();
+  if (keyword) {
+    out.keyword = keyword;
+  }
+  const describe = String(entry?.describe || '').trim();
+  if (describe) {
+    out.describe = describe;
   }
   return out;
 }

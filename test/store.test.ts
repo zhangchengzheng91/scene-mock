@@ -90,4 +90,54 @@ describe('store', () => {
     assert.ok(store.routes.match('GET', '/api/orders'));
     assert.equal(store.routes.match('POST', '/api/orders'), null);
   });
+
+  it('stores keyword without affecting routes', async () => {
+    const store = await loaded();
+    await store.upsertSceneApi('normal-order', 'get-orders', { keyword: 'PASS-A' });
+    const entry = store.getSceneDetail('normal-order').entries.find((e) => e.apiId === 'get-orders');
+    assert.equal(entry?.keyword, 'PASS-A');
+    assert.ok(store.routes.match('GET', '/api/orders'));
+  });
+
+  it('stores describe without affecting routes', async () => {
+    const store = await loaded();
+    await store.upsertSceneApi('normal-order', 'get-orders', { describe: '订单列表' });
+    const entry = store.getSceneDetail('normal-order').entries.find((e) => e.apiId === 'get-orders');
+    assert.equal(entry?.describe, '订单列表');
+    assert.ok(store.routes.match('GET', '/api/orders'));
+  });
+
+  it('disables a proxy without removing the scene', async () => {
+    const store = await loaded();
+    await store.upsertSceneApi('normal-order', 'get-orders', { enabled: false });
+    assert.equal(store.routes.match('GET', '/api/orders'), null);
+    assert.ok(store.routes.match('POST', '/api/orders'));
+    const listed = store.listScenes().find((s) => s.id === 'normal-order');
+    assert.equal(listed?.enabledCount, 1);
+    assert.equal(listed?.apiCount, 2);
+  });
+
+  it('toggles all proxies for a scene', async () => {
+    const store = await loaded();
+    await store.setSceneApisEnabled('normal-order', false);
+    assert.equal(store.routes.match('GET', '/api/orders'), null);
+    assert.equal(store.routes.match('POST', '/api/orders'), null);
+    assert.equal(store.getConfig().activeScenes.includes('normal-order'), false);
+    await store.setSceneApisEnabled('normal-order', true);
+    assert.ok(store.routes.match('GET', '/api/orders'));
+    assert.ok(store.routes.match('POST', '/api/orders'));
+    const listed = store.listScenes().find((s) => s.id === 'normal-order');
+    assert.equal(listed?.enabledCount, 2);
+    assert.equal(listed?.active, true);
+  });
+
+  it('enabling one proxy on an inactive scene isolates the others', async () => {
+    const store = await loaded();
+    await store.setSceneApisEnabled('normal-order', false);
+    await store.upsertSceneApi('normal-order', 'get-orders', { enabled: true });
+    assert.ok(store.routes.match('GET', '/api/orders'));
+    assert.equal(store.routes.match('POST', '/api/orders'), null);
+    const listed = store.listScenes().find((s) => s.id === 'normal-order');
+    assert.equal(listed?.enabledCount, 1);
+  });
 });

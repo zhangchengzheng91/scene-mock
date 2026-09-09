@@ -82,6 +82,11 @@ export const api = {
       `/scenes/${encodeURIComponent(sceneId)}/apis/${encodeURIComponent(apiId)}/share`,
       { method: 'PUT', body: JSON.stringify({ variant }) },
     ),
+  setSceneProxies: (sceneId: string, enabled: boolean) =>
+    request(`/scenes/${encodeURIComponent(sceneId)}/proxies`, {
+      method: 'PUT',
+      body: JSON.stringify({ enabled }),
+    }),
   variants: (apiId: string) => request(`/data/${encodeURIComponent(apiId)}`),
   activate: (sceneId: string) =>
     request('/activate', { method: 'POST', body: JSON.stringify({ sceneId }) }),

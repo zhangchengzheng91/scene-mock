@@ -39,6 +39,8 @@ export default function ResponseDrawer({
     form.setFieldsValue({
       status: entry.status,
       delay: entry.delay,
+      keyword: entry.keyword || '',
+      describe: entry.describe || '',
       contentType: entry.headers['Content-Type']
         || entry.headers['content-type']
         || 'application/json',
@@ -70,6 +72,8 @@ export default function ResponseDrawer({
       const result: any = await api.upsertSceneApi(sceneId, entry.apiId, {
         status: values.status,
         delay: values.delay,
+        keyword: values.keyword || '',
+        describe: values.describe || '',
         headers: { 'Content-Type': values.contentType },
         body,
       });
@@ -143,6 +147,12 @@ export default function ResponseDrawer({
           <Form form={form} layout="vertical">
             <Form.Item label="HTTP status" name="status">
               <InputNumber min={100} max={599} style={{ width: '100%' }} />
+            </Form.Item>
+            <Form.Item label="描述" name="describe">
+              <Input placeholder="仅展示，不参与代理匹配" />
+            </Form.Item>
+            <Form.Item label="PASS 关键字" name="keyword">
+              <Input placeholder="仅展示，不参与代理匹配" />
             </Form.Item>
             <Form.Item label="delay (ms)" name="delay">
               <InputNumber min={0} style={{ width: '100%' }} />

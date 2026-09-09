@@ -3,6 +3,7 @@ import {
   ActiveSetConflictPayload,
   ApiDef,
   ConflictItem,
+  isEntryEnabled,
   SceneConflictPayload,
   SceneDef,
 } from './types';
@@ -15,7 +16,7 @@ export function effectiveApiIds(
 ): Set<string> {
   const ids = new Set<string>();
   for (const [apiId, entry] of Object.entries(scene.apis || {})) {
-    if (!entry || !entry.data) {
+    if (!entry || !entry.data || !isEntryEnabled(entry)) {
       continue;
     }
     const variants = dataIndex.get(apiId);

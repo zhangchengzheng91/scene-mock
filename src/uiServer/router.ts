@@ -95,6 +95,13 @@ export default function setupRouter(router: Router) {
     ctx.body = await getContext().store.updateScene(ctx.params.id, bodyOf(ctx));
   });
 
+  wrap(router, 'put', '/cgi-bin/scenes/:id/proxies', async (ctx) => {
+    ctx.body = await getContext().store.setSceneApisEnabled(
+      ctx.params.id,
+      Boolean(bodyOf(ctx).enabled),
+    );
+  });
+
   wrap(router, 'delete', '/cgi-bin/scenes/:id', async (ctx) => {
     ctx.body = await getContext().store.deleteScene(ctx.params.id);
   });
