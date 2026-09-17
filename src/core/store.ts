@@ -19,6 +19,7 @@ import {
   DEFAULT_CONFIG,
   FileError,
   isEntryEnabled,
+  entryApiId,
   SceneApiEntry,
   SceneConflictPayload,
   SceneDef,
@@ -35,6 +36,7 @@ export interface SceneListItem {
 }
 
 export interface SceneEntryView {
+  entryId: string;
   apiId: string;
   method: string;
   url: string;
@@ -218,7 +220,10 @@ export class Store extends EventEmitter {
   usedByApi(apiId: string): string[] {
     const used: string[] = [];
     for (const scene of this.scenes.values()) {
-      if (scene.apis && scene.apis[apiId]) {
+      const hit = Object.entries(scene.apis || {}).some(
+        ([entryId, entry]) => entryApiId(entryId, entry) === apiId,
+      );
+      if (hit) {
         used.push(scene.id);
       }
     }
@@ -228,8 +233,12 @@ export class Store extends EventEmitter {
   refCount(apiId: string, variant: string): string[] {
     const used: string[] = [];
     for (const scene of this.scenes.values()) {
-      const entry = scene.apis?.[apiId];
-      if (entry && entry.data === variant) {
+      const hit = Object.entries(scene.apis || {}).some(
+        ([entryId, entry]) => (
+          entryApiId(entryId, entry) === apiId && entry.data === variant
+        ),
+      );
+      if (hit) {
         used.push(scene.id);
       }
     }
@@ -239,13 +248,15 @@ export class Store extends EventEmitter {
   getSceneDetail(id: string) {
     const scene = this.requireScene(id);
     const apiMap = this.getApiMap();
-    const entries: SceneEntryView[] = Object.keys(scene.apis || {}).map((apiId) => {
-      const entry = scene.apis[apiId];
+    const entries: SceneEntryView[] = Object.keys(scene.apis || {}).map((entryId) => {
+      const entry = scene.apis[entryId];
+      const apiId = entryApiId(entryId, entry);
       const api = apiMap.get(apiId);
       const unset = !entry?.data;
       const missing = !unset && !this.dataIndex.get(apiId)?.has(entry.data);
       const usedBy = entry?.data ? this.refCount(apiId, entry.data) : [];
       return {
+        entryId,
         apiId,
         method: api?.method || '',
         url: api?.url || '',
@@ -279,9 +290,10 @@ export class Store extends EventEmitter {
     const variants = this.dataIndex.get(apiId);
     const names = new Set<string>([...(variants?.keys() || [])]);
     for (const scene of this.scenes.values()) {
-      const data = scene.apis?.[apiId]?.data;
-      if (data) {
-        names.add(data);
+      for (const [entryId, entry] of Object.entries(scene.apis || {})) {
+        if (entryApiId(entryId, entry) === apiId && entry?.data) {
+          names.add(entry.data);
+        }
       }
     }
     return [...names].sort().map((variant) => ({
@@ -372,8 +384,14 @@ export class Store extends EventEmitter {
         );
       }
       for (const scene of this.scenes.values()) {
-        if (scene.apis?.[id]) {
-          delete scene.apis[id];
+        let changed = false;
+        for (const [entryId, entry] of Object.entries(scene.apis || {})) {
+          if (entryApiId(entryId, entry) === id) {
+            delete scene.apis[entryId];
+            changed = true;
+          }
+        }
+        if (changed) {
           await this.writeSceneFile(scene);
         }
       }
@@ -440,9 +458,9 @@ export class Store extends EventEmitter {
       }
       if (patch.apis) {
         const next: Record<string, SceneApiEntry> = {};
-        for (const [apiId, entry] of Object.entries(patch.apis)) {
-          this.requireApi(apiId);
-          next[apiId] = sanitizeEntry(entry);
+        for (const [entryId, entry] of Object.entries(patch.apis)) {
+          this.requireApi(entryApiId(entryId, entry));
+          next[entryId] = sanitizeEntry(entry);
         }
         scene.apis = next;
       }
@@ -478,7 +496,7 @@ export class Store extends EventEmitter {
 
   async upsertSceneApi(
     sceneId: string,
-    apiId: string,
+    entryId: string,
     patch: {
       status?: number;
       delay?: number;
@@ -493,9 +511,10 @@ export class Store extends EventEmitter {
     return this.enqueue(async () => {
       this.ensureReady();
       const scene = this.requireScene(sceneId);
+      const existed = Boolean(scene.apis[entryId]);
+      const current = scene.apis[entryId] || { data: '' };
+      const apiId = entryApiId(entryId, current);
       this.requireApi(apiId);
-      const existed = Boolean(scene.apis[apiId]);
-      const current = scene.apis[apiId] || { data: '' };
       let variant = patch.data || current.data;
       let forked = false;
       if (variant) {
@@ -518,6 +537,7 @@ export class Store extends EventEmitter {
         await this.writeDataFile(apiId, variant, {});
       }
       const next = sanitizeEntry({
+        apiId: current.apiId,
         status: patch.status !== undefined ? patch.status : current.status,
         delay: patch.delay !== undefined ? patch.delay : current.delay,
         headers: patch.headers !== undefined ? patch.headers : current.headers,
@@ -532,11 +552,11 @@ export class Store extends EventEmitter {
         const isolate = !this.config.activeScenes.includes(sceneId);
         const previewApis: Record<string, SceneApiEntry> = {};
         for (const [id, entry] of Object.entries(scene.apis || {})) {
-          previewApis[id] = isolate && id !== apiId
+          previewApis[id] = isolate && id !== entryId
             ? sanitizeEntry({ ...entry, enabled: false })
-            : (id === apiId ? next : entry);
+            : (id === entryId ? next : entry);
         }
-        previewApis[apiId] = next;
+        previewApis[entryId] = next;
         const conflict = detectActivateConflict(
           { ...scene, apis: previewApis },
           this.config.activeScenes,
@@ -547,7 +567,7 @@ export class Store extends EventEmitter {
         if (conflict) {
           this.pendingEnable = {
             sceneId,
-            enableApiIds: [apiId],
+            enableApiIds: [entryId],
             isolateOthers: isolate,
           };
           throw new HttpError(409, 'scene_conflict', '与已激活 Scene 存在接口重合', conflict);
@@ -555,14 +575,14 @@ export class Store extends EventEmitter {
         if (isolate) {
           scene.apis = previewApis;
         } else {
-          scene.apis[apiId] = next;
+          scene.apis[entryId] = next;
         }
         if (!this.config.activeScenes.includes(sceneId)) {
           this.config.activeScenes = [...this.config.activeScenes, sceneId];
           await this.writeJson(this.configFile(), this.config);
         }
       } else {
-        scene.apis[apiId] = next;
+        scene.apis[entryId] = next;
         if (
           patch.enabled === false
           && !Object.values(scene.apis).some((entry) => isEntryEnabled(entry))
@@ -627,13 +647,17 @@ export class Store extends EventEmitter {
     });
   }
 
-  async copySceneApi(sceneId: string, apiId: string, fromSceneId: string) {
+  async copySceneApi(sceneId: string, entryId: string, fromSceneId: string) {
     return this.enqueue(async () => {
       this.ensureReady();
       const scene = this.requireScene(sceneId);
+      const dest = scene.apis[entryId];
+      const apiId = entryApiId(entryId, dest);
       this.requireApi(apiId);
       const source = this.requireScene(fromSceneId);
-      const entry = source.apis[apiId];
+      const entry = Object.entries(source.apis || {}).find(
+        ([id, item]) => entryApiId(id, item) === apiId,
+      )?.[1];
       if (!entry) {
         throw new HttpError(
           404,
@@ -641,7 +665,10 @@ export class Store extends EventEmitter {
           `源 Scene 未包含接口 ${apiId}`,
         );
       }
-      scene.apis[apiId] = await this.copyEntryToScene(sceneId, apiId, entry);
+      scene.apis[entryId] = await this.copyEntryToScene(sceneId, apiId, {
+        ...entry,
+        apiId: dest?.apiId,
+      });
       await this.writeSceneFile(scene);
       this.rebuild();
       this.emitChange();
@@ -649,17 +676,44 @@ export class Store extends EventEmitter {
     });
   }
 
-  async shareSceneApi(sceneId: string, apiId: string, variant: string) {
+  async duplicateSceneApi(sceneId: string, entryId: string) {
     return this.enqueue(async () => {
       this.ensureReady();
       const scene = this.requireScene(sceneId);
+      const source = scene.apis[entryId];
+      if (!source) {
+        throw new HttpError(404, 'not_found', `Scene 未包含该接口条目`);
+      }
+      const apiId = entryApiId(entryId, source);
+      this.requireApi(apiId);
+      const nextId = nextVariantName(new Set(Object.keys(scene.apis || {})), `${apiId}-copy`);
+      const copied = await this.copyEntryToScene(sceneId, apiId, source);
+      const describeBase = String(source.describe || '').trim() || apiId;
+      scene.apis[nextId] = sanitizeEntry({
+        ...copied,
+        apiId,
+        describe: `${describeBase}-复制`,
+        enabled: false,
+      });
+      await this.writeSceneFile(scene);
+      this.rebuild();
+      this.emitChange();
+      return this.getSceneDetail(sceneId);
+    });
+  }
+
+  async shareSceneApi(sceneId: string, entryId: string, variant: string) {
+    return this.enqueue(async () => {
+      this.ensureReady();
+      const scene = this.requireScene(sceneId);
+      const current = scene.apis[entryId] || { data: variant };
+      const apiId = entryApiId(entryId, current);
       this.requireApi(apiId);
       assertSafeId(variant, 'variant');
       if (!this.dataIndex.get(apiId)?.has(variant)) {
         throw new HttpError(404, 'not_found', `variant 不存在：${variant}`);
       }
-      const current = scene.apis[apiId] || { data: variant };
-      scene.apis[apiId] = { ...current, data: variant };
+      scene.apis[entryId] = sanitizeEntry({ ...current, data: variant });
       await this.writeSceneFile(scene);
       this.rebuild();
       this.emitChange();
@@ -693,11 +747,14 @@ export class Store extends EventEmitter {
           throw new HttpError(400, 'invalid', 'fork 需要 sceneId');
         }
         const scene = this.requireScene(opts.sceneId);
-        if (!scene.apis[apiId] || scene.apis[apiId].data !== variant) {
+        const match = Object.entries(scene.apis || {}).find(
+          ([id, entry]) => entryApiId(id, entry) === apiId && entry.data === variant,
+        );
+        if (!match) {
           throw new HttpError(400, 'invalid', '该 Scene 未引用此 variant');
         }
         target = nextVariantName(this.variantNames(apiId), opts.sceneId);
-        scene.apis[apiId] = { ...scene.apis[apiId], data: target };
+        scene.apis[match[0]] = { ...match[1], data: target };
         await this.writeSceneFile(scene);
         forked = true;
       }
@@ -900,9 +957,23 @@ export class Store extends EventEmitter {
         await fs.promises.rename(oldDir, newDir);
       }
       for (const scene of this.scenes.values()) {
-        if (scene.apis?.[oldId]) {
-          scene.apis[newId] = scene.apis[oldId];
-          delete scene.apis[oldId];
+        let changed = false;
+        const nextApis: Record<string, SceneApiEntry> = {};
+        for (const [entryId, entry] of Object.entries(scene.apis || {})) {
+          if (entryId === oldId && !entry.apiId) {
+            nextApis[newId] = entry;
+            changed = true;
+            continue;
+          }
+          if (entry.apiId === oldId) {
+            nextApis[entryId] = { ...entry, apiId: newId };
+            changed = true;
+            continue;
+          }
+          nextApis[entryId] = entry;
+        }
+        if (changed) {
+          scene.apis = nextApis;
           await this.writeSceneFile(scene);
         }
       }
@@ -1357,6 +1428,10 @@ function sanitizeEntry(entry: SceneApiEntry): SceneApiEntry {
   const describe = String(entry?.describe || '').trim();
   if (describe) {
     out.describe = describe;
+  }
+  const apiId = String(entry?.apiId || '').trim();
+  if (apiId) {
+    out.apiId = apiId;
   }
   return out;
 }

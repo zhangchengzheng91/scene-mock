@@ -48,6 +48,7 @@ export interface SceneListItem {
 }
 
 export interface SceneEntryView {
+  entryId: string;
   apiId: string;
   method: string;
   url: string;

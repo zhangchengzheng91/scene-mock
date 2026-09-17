@@ -4,6 +4,7 @@ import {
   AmbiguousRoute,
   ApiDef,
   CompiledRoute,
+  entryApiId,
   isEntryEnabled,
   SceneDef,
 } from './types';
@@ -38,10 +39,11 @@ export class RouteTable {
       if (!scene) {
         continue;
       }
-      for (const [apiId, entry] of Object.entries(scene.apis || {})) {
+      for (const [entryId, entry] of Object.entries(scene.apis || {})) {
         if (!entry || !entry.data || !isEntryEnabled(entry)) {
           continue;
         }
+        const apiId = entryApiId(entryId, entry);
         const variants = input.dataIndex.get(apiId);
         if (!variants || !variants.has(entry.data)) {
           continue;

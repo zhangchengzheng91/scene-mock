@@ -77,6 +77,11 @@ export const api = {
       `/scenes/${encodeURIComponent(sceneId)}/apis/${encodeURIComponent(apiId)}/copy`,
       { method: 'POST', body: JSON.stringify({ fromSceneId }) },
     ),
+  duplicateSceneApi: (sceneId: string, entryId: string) =>
+    request(
+      `/scenes/${encodeURIComponent(sceneId)}/apis/${encodeURIComponent(entryId)}/duplicate`,
+      { method: 'POST', body: '{}' },
+    ),
   shareSceneApi: (sceneId: string, apiId: string, variant: string) =>
     request(
       `/scenes/${encodeURIComponent(sceneId)}/apis/${encodeURIComponent(apiId)}/share`,

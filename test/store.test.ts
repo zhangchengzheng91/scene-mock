@@ -140,4 +140,21 @@ describe('store', () => {
     const listed = store.listScenes().find((s) => s.id === 'normal-order');
     assert.equal(listed?.enabledCount, 1);
   });
+
+  it('duplicates a scene api with renamed describe and mock off', async () => {
+    const store = await loaded();
+    await store.upsertSceneApi('normal-order', 'get-orders', { describe: '订单列表' });
+    await store.duplicateSceneApi('normal-order', 'get-orders');
+    const detail = store.getSceneDetail('normal-order');
+    const original = detail.entries.find((e) => e.entryId === 'get-orders');
+    const copied = detail.entries.find((e) => e.entryId === 'get-orders-copy');
+    assert.equal(original?.describe, '订单列表');
+    assert.equal(copied?.apiId, 'get-orders');
+    assert.equal(copied?.describe, '订单列表-复制');
+    assert.equal(copied?.enabled, false);
+    assert.ok(store.routes.match('GET', '/api/orders'));
+    const listed = store.listScenes().find((s) => s.id === 'normal-order');
+    assert.equal(listed?.apiCount, 3);
+    assert.equal(listed?.enabledCount, 2);
+  });
 });

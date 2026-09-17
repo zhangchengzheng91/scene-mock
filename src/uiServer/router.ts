@@ -125,6 +125,13 @@ export default function setupRouter(router: Router) {
     ctx.body = await store.updateScene(ctx.params.id, { apis });
   });
 
+  wrap(router, 'post', '/cgi-bin/scenes/:id/apis/:apiId/duplicate', async (ctx) => {
+    ctx.body = await getContext().store.duplicateSceneApi(
+      ctx.params.id,
+      ctx.params.apiId,
+    );
+  });
+
   wrap(router, 'post', '/cgi-bin/scenes/:id/apis/:apiId/copy', async (ctx) => {
     const { fromSceneId } = bodyOf(ctx);
     ctx.body = await getContext().store.copySceneApi(

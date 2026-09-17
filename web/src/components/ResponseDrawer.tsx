@@ -69,7 +69,7 @@ export default function ResponseDrawer({
     const values = await form.validateFields();
     setSaving(true);
     try {
-      const result: any = await api.upsertSceneApi(sceneId, entry.apiId, {
+      const result: any = await api.upsertSceneApi(sceneId, entry.entryId, {
         status: values.status,
         delay: values.delay,
         keyword: values.keyword || '',
@@ -104,7 +104,7 @@ export default function ResponseDrawer({
       return;
     }
     try {
-      await api.shareSceneApi(sceneId, entry.apiId, variant);
+      await api.shareSceneApi(sceneId, entry.entryId, variant);
       message.success(`已显式共享 ${variant}`);
       onSaved();
     } catch (err) {

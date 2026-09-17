@@ -77,7 +77,7 @@ export default function SceneDetailPage({
 
   const toggleProxy = async (row: SceneEntryView, enabled: boolean) => {
     try {
-      await api.upsertSceneApi(scene.id, row.apiId, { enabled });
+      await api.upsertSceneApi(scene.id, row.entryId, { enabled });
       load();
       refresh();
     } catch (err) {
@@ -123,7 +123,7 @@ export default function SceneDetailPage({
 
       <Table
         className="scene-api-table"
-        rowKey="apiId"
+        rowKey="entryId"
         size="small"
         scroll={{ x: 'max-content' }}
         dataSource={scene.entries}
@@ -192,10 +192,20 @@ export default function SceneDetailPage({
           },
           {
             title: '操作',
-            width: 260,
+            width: 320,
             render: (_, row) => (
               <Space>
                 <Button size="small" onClick={() => setEditing(row)}>编辑返回值</Button>
+                <Button size="small" onClick={async () => {
+                  try {
+                    await api.duplicateSceneApi(scene.id, row.entryId);
+                    message.success('已复制，默认不开启 mock');
+                    load();
+                    refresh();
+                  } catch (err) {
+                    message.error(isApiError(err) ? err.message : String(err));
+                  }
+                }}>复制</Button>
                 <Button size="small" onClick={() => {
                   setCopyApi(row);
                   setFromSceneId(undefined);
@@ -204,7 +214,7 @@ export default function SceneDetailPage({
                   title="从本 Scene 移除该接口？（不删接口池和 data）"
                   onConfirm={async () => {
                     try {
-                      await api.removeSceneApi(scene.id, row.apiId);
+                      await api.removeSceneApi(scene.id, row.entryId);
                       load();
                       refresh();
                     } catch (err) {
@@ -272,7 +282,7 @@ export default function SceneDetailPage({
             return;
           }
           try {
-            await api.copySceneApi(scene.id, copyApi.apiId, fromSceneId);
+            await api.copySceneApi(scene.id, copyApi.entryId, fromSceneId);
             message.success('已复制为新 variant');
             setCopyApi(null);
             load();

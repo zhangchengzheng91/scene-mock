@@ -8,6 +8,8 @@ export interface ApiDef {
 }
 
 export interface SceneApiEntry {
+  /** 接口池 id；缺省等于 Scene.apis 的 key */
+  apiId?: string;
   status?: number;
   delay?: number;
   headers?: Record<string, string>;
@@ -22,6 +24,28 @@ export interface SceneApiEntry {
 
 export function isEntryEnabled(entry?: SceneApiEntry | null): boolean {
   return Boolean(entry) && entry!.enabled !== false;
+}
+
+export function entryApiId(entryId: string, entry?: SceneApiEntry | null): string {
+  const explicit = String(entry?.apiId || '').trim();
+  return explicit || entryId;
+}
+
+export function findApiEntry(
+  scene: { apis?: Record<string, SceneApiEntry> },
+  apiId: string,
+): SceneApiEntry | undefined {
+  let fallback: SceneApiEntry | undefined;
+  for (const [entryId, entry] of Object.entries(scene.apis || {})) {
+    if (entryApiId(entryId, entry) !== apiId) {
+      continue;
+    }
+    if (isEntryEnabled(entry)) {
+      return entry;
+    }
+    fallback = entry;
+  }
+  return fallback;
 }
 
 export interface SceneDef {

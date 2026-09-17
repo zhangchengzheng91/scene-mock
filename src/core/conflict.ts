@@ -3,6 +3,8 @@ import {
   ActiveSetConflictPayload,
   ApiDef,
   ConflictItem,
+  entryApiId,
+  findApiEntry,
   isEntryEnabled,
   SceneConflictPayload,
   SceneDef,
@@ -15,10 +17,11 @@ export function effectiveApiIds(
   dataIndex: DataIndex,
 ): Set<string> {
   const ids = new Set<string>();
-  for (const [apiId, entry] of Object.entries(scene.apis || {})) {
+  for (const [entryId, entry] of Object.entries(scene.apis || {})) {
     if (!entry || !entry.data || !isEntryEnabled(entry)) {
       continue;
     }
+    const apiId = entryApiId(entryId, entry);
     const variants = dataIndex.get(apiId);
     if (!variants || !variants.has(entry.data)) {
       continue;
@@ -51,8 +54,8 @@ function makeItem(
   dataIndex: DataIndex,
 ): ConflictItem {
   const api = apis.get(apiId);
-  const existingEntry = existing.apis[apiId];
-  const incomingEntry = incoming.apis[apiId];
+  const existingEntry = findApiEntry(existing, apiId);
+  const incomingEntry = findApiEntry(incoming, apiId);
   return {
     apiId,
     method: api?.method || '',
