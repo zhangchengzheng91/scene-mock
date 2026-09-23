@@ -72,11 +72,6 @@ export const api = {
       `/scenes/${encodeURIComponent(sceneId)}/apis/${encodeURIComponent(apiId)}`,
       { method: 'DELETE' },
     ),
-  copySceneApi: (sceneId: string, apiId: string, fromSceneId: string) =>
-    request(
-      `/scenes/${encodeURIComponent(sceneId)}/apis/${encodeURIComponent(apiId)}/copy`,
-      { method: 'POST', body: JSON.stringify({ fromSceneId }) },
-    ),
   duplicateSceneApi: (sceneId: string, entryId: string) =>
     request(
       `/scenes/${encodeURIComponent(sceneId)}/apis/${encodeURIComponent(entryId)}/duplicate`,

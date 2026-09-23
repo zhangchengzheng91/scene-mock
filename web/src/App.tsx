@@ -13,7 +13,7 @@ import Banners from './components/Banners';
 import ConflictModal from './components/ConflictModal';
 import ApisPage from './pages/ApisPage';
 import ConfigPage from './pages/ConfigPage';
-import ScenesPage from './pages/ScenesPage';
+import ScenesPage from './pages/ScenePage';
 import {
   ActiveSetConflict,
   ConflictPayload,

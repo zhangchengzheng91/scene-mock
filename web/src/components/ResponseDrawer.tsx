@@ -115,14 +115,13 @@ export default function ResponseDrawer({
   return (
     <Drawer
       title={entry ? `编辑返回值 · ${entry.apiId}` : '编辑返回值'}
-      width={560}
       open={open}
       onClose={onClose}
-      extra={(
-        <Space>
-          <Button onClick={formatJson}>格式化 JSON</Button>
+      width={900}
+      footer={(
+        <div style={{ textAlign: 'right' }}>
           <Button type="primary" loading={saving} onClick={save}>保存</Button>
-        </Space>
+        </div>
       )}
     >
       {entry && (
@@ -144,7 +143,13 @@ export default function ResponseDrawer({
               </>
             )}
           </Typography.Paragraph>
-          <Form form={form} layout="vertical">
+          <Form
+            form={form}
+            layout="horizontal"
+            labelCol={{ flex: '120px' }}
+            labelAlign="left"
+            colon={false}
+          >
             <Form.Item label="HTTP status" name="status">
               <InputNumber min={100} max={599} style={{ width: '100%' }} />
             </Form.Item>
@@ -175,7 +180,10 @@ export default function ResponseDrawer({
               />
             </Form.Item>
           )}
-          <Typography.Text strong>Body</Typography.Text>
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Typography.Text strong>Body</Typography.Text>
+            <Button onClick={formatJson}>格式化 JSON</Button>
+          </Space>
           <Input.TextArea
             value={bodyText}
             onChange={(e) => setBodyText(e.target.value)}

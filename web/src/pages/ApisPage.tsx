@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   Button,
+  Card,
   Form,
   Input,
   Modal,
@@ -93,11 +94,11 @@ export default function ApisPage({ status }: { status: Status | null }) {
 
   return (
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
-      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+      <Card style={{ width: '100%', justifyContent: 'space-between' }}>
         <Input.Search
           allowClear
           placeholder="搜索 method / URL / id / 描述"
-          style={{ width: 320 }}
+          style={{ width: 320, marginRight: "8px" }}
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
@@ -109,7 +110,7 @@ export default function ApisPage({ status }: { status: Status | null }) {
         }}>
           注册接口
         </Button>
-      </Space>
+      </Card>
 
       <Table
         rowKey="id"

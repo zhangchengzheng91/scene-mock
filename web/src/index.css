@@ -81,8 +81,10 @@ body {
   padding-inline: 8px;
 }
 
+.scene-api-table .ant-table-thead > tr > th,
 .scene-api-table .ant-table-tbody > tr > td {
-  vertical-align: top;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .scene-api-table .ant-table-tbody > tr > td:nth-child(5) {
