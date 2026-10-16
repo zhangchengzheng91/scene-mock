@@ -10,6 +10,8 @@ import bodyParser from 'koa-bodyparser';
 import setupRouter from '../src/uiServer/router';
 import { initContext } from '../src/context';
 
+process.env.SCENE_MOCK_RULES_FILE = path.join(os.tmpdir(), `scene-mock-rules-${process.pid}.txt`);
+
 function mockOptions(): Whistle.PluginOptions {
   const kv = new Map<string, string>();
   return {
@@ -74,8 +76,8 @@ describe('router (admin api)', () => {
     const { status, data } = await call('GET', '/projects');
     assert.equal(status, 200);
     assert.equal(data.length, 1);
-    assert.equal(data[0].id, 'microcredit');
-    assert.equal(data[0].host, 'microcredit-ms-test-c.jhjj.paas.test');
+    assert.equal(data[0].id, 'example');
+    assert.equal(data[0].host, 'www.example1.com');
     assert.equal(data[0].target, 'http://localhost:8889');
     assert.equal(data[0].sceneCount, 3);
     assert.equal(data[0].routeCount, 2);
@@ -84,11 +86,11 @@ describe('router (admin api)', () => {
   it('rejects duplicate host on create with 409 duplicate_host', async () => {
     const { status, data } = await call('POST', '/projects', {
       name: '重复',
-      host: 'HTTP://microcredit-ms-test-c.jhjj.paas.test/',
+      host: 'HTTP://www.example1.com/',
     });
     assert.equal(status, 409);
     assert.equal(data.error, 'duplicate_host');
-    assert.equal(data.details.projectId, 'microcredit');
+    assert.equal(data.details.projectId, 'example');
   });
 
   it('creates a project skeleton and normalizes host/target', async () => {
@@ -116,26 +118,26 @@ describe('router (admin api)', () => {
   });
 
   it('scopes scenes and activation conflicts by project', async () => {
-    const scenes = await call('GET', '/projects/microcredit/scenes');
+    const scenes = await call('GET', '/projects/example/scenes');
     assert.equal(scenes.status, 200);
     assert.equal(scenes.data.length, 3);
 
-    const conflict = await call('POST', '/projects/microcredit/activate', {
+    const conflict = await call('POST', '/projects/example/activate', {
       sceneId: 'empty-data',
     });
     assert.equal(conflict.status, 409);
     assert.equal(conflict.data.details.error, 'scene_conflict');
-    assert.equal(conflict.data.details.projectId, 'microcredit');
+    assert.equal(conflict.data.details.projectId, 'example');
     assert.equal(conflict.data.details.incoming.id, 'empty-data');
 
-    const resolved = await call('POST', '/projects/microcredit/activate/resolve', {
+    const resolved = await call('POST', '/projects/example/activate/resolve', {
       sceneId: 'empty-data',
       action: 'keep-new',
     });
     assert.equal(resolved.status, 200);
     assert.deepEqual(resolved.data.activeScenes, ['empty-data']);
     // 还原
-    await call('POST', '/projects/microcredit/activate/resolve', {
+    await call('POST', '/projects/example/activate/resolve', {
       sceneId: 'normal-order',
       action: 'keep-new',
     });
@@ -144,7 +146,7 @@ describe('router (admin api)', () => {
   it('returns status with per-project runtime', async () => {
     const { status, data } = await call('GET', '/status');
     assert.equal(status, 200);
-    assert.ok(data.projects.microcredit);
+    assert.ok(data.projects.example);
     assert.ok(Array.isArray(data.unresolvedHosts));
     assert.ok(Array.isArray(data.orphans));
   });
@@ -160,7 +162,7 @@ describe('router (admin api)', () => {
     assert.match(rules.data.text, /^\/gateway\/ scene-mock:\/\/$/m);
     assert.match(
       rules.data.text,
-      /^microcredit-ms-test-c\.jhjj\.paas\.test scene-mock:\/\/$/m,
+      /^www\.example1\.com scene-mock:\/\/$/m,
     );
   });
 });

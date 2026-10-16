@@ -11,16 +11,16 @@ import {
 describe('project', () => {
   it('normalizes host: strip scheme/port, keep non-root path, lowercase', () => {
     assert.equal(
-      normalizeHost('HTTP://Microcredit-ms-test-c.jhjj.paas.test/'),
-      'microcredit-ms-test-c.jhjj.paas.test',
+      normalizeHost('HTTP://Www.example1.com/'),
+      'www.example1.com',
     );
-    assert.equal(normalizeHost('http://yxhms.paas.corp/'), 'yxhms.paas.corp');
+    assert.equal(normalizeHost('http://www.example1.com/'), 'www.example1.com');
     assert.equal(
-      normalizeHost('http://yrxd.test.creditease.cn/cc'),
-      'yrxd.test.creditease.cn/cc',
+      normalizeHost('http://www.example2.com/cc'),
+      'www.example2.com/cc',
     );
-    assert.equal(normalizeHost('http://yxhms.paas.corp/dd'), 'yxhms.paas.corp/dd');
-    assert.equal(normalizeHost('http://yxhms.paas.corp/abc/'), 'yxhms.paas.corp/abc');
+    assert.equal(normalizeHost('http://www.example1.com/dd'), 'www.example1.com/dd');
+    assert.equal(normalizeHost('http://www.example1.com/abc/'), 'www.example1.com/abc');
     assert.equal(normalizeHost('https://example.com:8443/api/'), 'example.com/api');
     assert.equal(normalizeHost('localhost:8889'), 'localhost');
     assert.equal(normalizeHost(''), '');
@@ -28,16 +28,16 @@ describe('project', () => {
   });
 
   it('treats /api under the current host prefix as upstream, and pages as local', () => {
-    assert.equal(isUpstreamApi('/cc/api', 'yrxd.test.creditease.cn/cc'), true);
-    assert.equal(isUpstreamApi('/cc/api/v1/user/smsCode/request', 'yrxd.test.creditease.cn/cc'), true);
-    assert.equal(isUpstreamApi('/cc/login', 'yrxd.test.creditease.cn/cc'), false);
-    assert.equal(isUpstreamApi('/cc/static/js/lodash.js', 'yrxd.test.creditease.cn/cc'), false);
-    assert.equal(isUpstreamApi('/cc/apis', 'yrxd.test.creditease.cn/cc'), false);
-    assert.equal(isUpstreamApi('/api', 'yrxd.test.creditease.cn'), true);
-    assert.equal(isUpstreamApi('/api/v1/user/smsCode/request', 'yrxd.test.creditease.cn'), true);
-    assert.equal(isUpstreamApi('/login', 'yrxd.test.creditease.cn'), false);
-    assert.equal(isUpstreamApi('/static/js/lodash.js', 'yrxd.test.creditease.cn'), false);
-    assert.equal(isUpstreamApi('/cc/api/v1/user', 'yrxd.test.creditease.cn'), false);
+    assert.equal(isUpstreamApi('/cc/api', 'www.example2.com/cc'), true);
+    assert.equal(isUpstreamApi('/cc/api/v1/user/profile/request', 'www.example2.com/cc'), true);
+    assert.equal(isUpstreamApi('/cc/login', 'www.example2.com/cc'), false);
+    assert.equal(isUpstreamApi('/cc/static/js/lodash.js', 'www.example2.com/cc'), false);
+    assert.equal(isUpstreamApi('/cc/apis', 'www.example2.com/cc'), false);
+    assert.equal(isUpstreamApi('/api', 'www.example2.com'), true);
+    assert.equal(isUpstreamApi('/api/v1/user/profile/request', 'www.example2.com'), true);
+    assert.equal(isUpstreamApi('/login', 'www.example2.com'), false);
+    assert.equal(isUpstreamApi('/static/js/lodash.js', 'www.example2.com'), false);
+    assert.equal(isUpstreamApi('/cc/api/v1/user', 'www.example2.com'), false);
   });
 
   it('keeps a non-root path on target and accepts missing scheme', () => {
@@ -59,10 +59,10 @@ describe('project', () => {
   });
 
   it('generates project id from name with dedupe', () => {
-    assert.equal(projectIdFromName('microcredit', new Set()), 'microcredit');
-    assert.equal(projectIdFromName('microcredit', new Set(['microcredit'])), 'microcredit-2');
-    assert.equal(projectIdFromName('微贷后端', new Set()), 'project');
-    assert.equal(projectIdFromName('微贷后端', new Set(['project'])), 'project-2');
+    assert.equal(projectIdFromName('example', new Set()), 'example');
+    assert.equal(projectIdFromName('example', new Set(['example'])), 'example-2');
+    assert.equal(projectIdFromName('例子', new Set()), 'project');
+    assert.equal(projectIdFromName('例子', new Set(['project'])), 'project-2');
     assert.equal(projectIdFromName('My Service!', new Set()), 'my-service');
   });
 });

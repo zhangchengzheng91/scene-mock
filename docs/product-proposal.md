@@ -37,7 +37,7 @@
 
 - **异常流联调**：同一套下单接口，在「正常」「库存不足」「支付超时」之间来回切，测完要能立刻回到正常数据。
 - **部分真实、部分 mock**：只 mock 尚未就绪或需要造数的接口，其余走真实环境。
-- **多项目并行**：一个前端仓库要同时联调多个后端域名（如 `microcredit-ms-test-c.jhjj.paas.test` 与本地 `localhost:8889`），每个域名的接口集合与透传目标各不相同。
+- **多项目并行**：一个前端仓库要同时联调多个后端域名（如 `www.example1.com` 与本地 `localhost:8889`），每个域名的接口集合与透传目标各不相同。
 - **团队复用**：把「空数据联调」「下单异常流」提交到 git，新成员 clone 即可用，不必每人重写一份 values。
 
 ### 1.2 核心痛点
@@ -84,7 +84,7 @@
 
 | 对象 | 职责 | 示例 | 解决 |
 | --- | --- | --- | --- |
-| **项目** | 代理配置单元：被代理域名、代理到的域名、whistle 规则 | `microcredit-ms-test-c.jhjj.paas.test → http://localhost:8889` | 痛点③ |
+| **项目** | 代理配置单元：被代理域名、代理到的域名、whistle 规则 | `www.example1.com → http://localhost:8889` | 痛点③ |
 | **接口池**（项目内） | 该项目接口定义注册表（method + URL 模式 + 描述） | `GET /api/users/:id` | 痛点① |
 | **Scene**（项目内） | 一组「接口 + 各自返回值」的组合，可命名、可启动 | 正常下单 / 下单异常流 / 空数据联调 | 痛点② |
 
@@ -130,7 +130,7 @@ scene-mock 是跑在开发者本机的轻量工具，不是云端平台。产品
 浏览器 / App
     │
     ▼
-whistle                    # 每个项目一条规则，例如 microcredit-ms-test-c.jhjj.paas.test scene-mock://
+whistle                    # 每个项目一条规则，例如 www.example1.com scene-mock://
     │
     ▼
 scene-mock
@@ -165,7 +165,7 @@ scene-mock
 
 约定：
 
-- 被代理域名写 host 即可（如 `microcredit-ms-test-c.jhjj.paas.test`），可带协议便于阅读，生成规则时去掉协议。
+- 被代理域名写 host 即可（如 `www.example1.com`），可带协议便于阅读，生成规则时去掉协议。
 - 不同项目的被代理域名不能相同；同一 host 只属于一个项目。
 - 直接请求 whistle 自己的监听端口仍进管理页，即使写进项目也不会被劫持。
 
@@ -210,7 +210,7 @@ Web 面板与手改文件是同一数据源：面板写文件，文件变更由�
 mocks/
 ├── config.json                        # 全局配置：matchPatterns、unmatched 默认值
 └── projects/                          # 每个项目一个目录
-    └── microcredit/                   # 项目目录名 = 项目 id
+    └── example/                   # 项目目录名 = 项目 id
         ├── project.json               # 项目配置：name、被代理域名、代理到的域名、激活 Scene
         ├── apis.json                  # 该项目接口池
         ├── scenes/                    # 该项目每个 Scene 一个 JSON
@@ -250,8 +250,8 @@ mocks/
 
 ```json
 {
-  "name": "微贷后端",
-  "host": "microcredit-ms-test-c.jhjj.paas.test",
+  "name": "例子",
+  "host": "www.example1.com",
   "target": "http://localhost:8889",
   "activeScenes": ["normal-order"]
 }
@@ -407,7 +407,7 @@ Scene 的 `apis` 里声明了某接口、但未设 `data`、或对应 variant �
 1. **method 精确相等**（大小写不敏感，`GET` = `get`）。
 2. **path 匹配 URL 模式**。支持 `:param` 单段参数（`/api/users/:id` 匹配 `/api/users/42`，不匹配 `/api/users` 或 `/api/users/42/orders`）。
 3. **忽略 query string**。`GET /api/orders?page=1` 与 `GET /api/orders` 视为同一接口。query 匹配不做一期能力，避免规则爆炸。
-4. strip 掉转发带来的 host，只比 path。whistle 把 `https://microcredit-ms-test-c.jhjj.paas.test/api/orders` 转到本机后，按 `/api/orders` 在该项目路由表内匹配。
+4. strip 掉转发带来的 host，只比 path。whistle 把 `https://www.example1.com/api/orders` 转到本机后，按 `/api/orders` 在该项目路由表内匹配。
 
 | 请求 | 接口模式 | 结果 |
 | --- | --- | --- |
@@ -470,8 +470,8 @@ whistle 不再存储任何 mock 数据，**代理规则按项目维度生成**�
 每个项目生成一条 whistle 规则（示例为 whistle 插件短协议形态；独立服务形态则为转发到 `http://127.0.0.1:3456`）：
 
 ```
-# 项目：微贷后端 · 被代理域名进 scene-mock，未命中由服务透传到 http://localhost:8889
-microcredit-ms-test-c.jhjj.paas.test scene-mock://
+# 项目：例子 · 被代理域名进 scene-mock，未命中由服务透传到 http://localhost:8889
+www.example1.com scene-mock://
 ```
 
 多个项目即多行，与全局 `matchPatterns`（如 `/api/`）叠加，去重后统一下发。被代理域名可带协议书写，规则里只保留 host。

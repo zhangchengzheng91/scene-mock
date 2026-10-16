@@ -1,7 +1,28 @@
 {
   "name": "whistle.scene-mock",
   "version": "1.0.0",
-  "description": "",
+  "description": "Whistle 插件：用接口池和 Scene 管理 mock，切换场景不改 Rules",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "dist",
+    "web/dist",
+    "rules.txt"
+  ],
+  "keywords": [
+    "whistle",
+    "whistle-plugin",
+    "mock"
+  ],
+  "license": "MIT",
+  "author": "zhangchengzheng91",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhangchengzheng91/scene-mock.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "whistleConfig": {
     "hideLongProtocol": true,
     "priority": 0
@@ -11,7 +32,8 @@
     "watch": "lack watch web/dist",
     "build": "tsc && vite build --config web/vite.config.mts",
     "build:web": "vite build --config web/vite.config.mts",
-    "test": "tsx --test test/*.test.ts"
+    "test": "tsx --test test/*.test.ts",
+    "prepublishOnly": "npm test && npm run build"
   },
   "devDependencies": {
     "@ant-design/icons": "^6.0.0",

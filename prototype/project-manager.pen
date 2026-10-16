@@ -1010,7 +1010,7 @@
                     {
                       "type": "frame",
                       "id": "WqYXAU",
-                      "name": "Row microcredit",
+                      "name": "Row example",
                       "width": "fill_container",
                       "height": 52,
                       "fill": "$surface",
@@ -1038,7 +1038,7 @@
                               "id": "pPaNPN",
                               "name": "Name",
                               "fill": "$fg",
-                              "content": "微贷后端",
+                              "content": "例子",
                               "fontFamily": "$fontB",
                               "fontSize": 13,
                               "fontWeight": "600"
@@ -1084,7 +1084,7 @@
                               "id": "y5bRNp",
                               "name": "Id",
                               "fill": "$fg2",
-                              "content": "microcredit",
+                              "content": "example",
                               "fontFamily": "$fontM",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -1132,7 +1132,7 @@
                               "id": "yrXHdx",
                               "name": "Id",
                               "fill": "$fg2",
-                              "content": "microcredit-ms-test-c.jhjj.paas.test → http://localhost:8889",
+                              "content": "www.example1.com → http://localhost:8889",
                               "fontFamily": "$fontM",
                               "fontSize": 11,
                               "fontWeight": "normal"
@@ -1847,7 +1847,7 @@
                               "id": "E8lRDU",
                               "name": "Id",
                               "fill": "$fg2",
-                              "content": "pay-ms-test-c.jhjj.paas.test → http://localhost:8890",
+                              "content": "www.example2.com → http://localhost:8890",
                               "fontFamily": "$fontM",
                               "fontSize": 11,
                               "fontWeight": "normal"
@@ -2566,7 +2566,7 @@
                     {
                       "type": "frame",
                       "id": "O5GIN",
-                      "name": "Row microcredit",
+                      "name": "Row example",
                       "width": "fill_container",
                       "height": 52,
                       "fill": "$surface",
@@ -2594,7 +2594,7 @@
                               "id": "D3YYbm",
                               "name": "Name",
                               "fill": "$fg",
-                              "content": "微贷后端",
+                              "content": "例子",
                               "fontFamily": "$fontB",
                               "fontSize": 13,
                               "fontWeight": "600"
@@ -2640,7 +2640,7 @@
                               "id": "C4Q7Xr",
                               "name": "Id",
                               "fill": "$fg2",
-                              "content": "microcredit",
+                              "content": "example",
                               "fontFamily": "$fontM",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -2688,7 +2688,7 @@
                               "id": "b8uDyP",
                               "name": "Id",
                               "fill": "$fg2",
-                              "content": "microcredit-ms-test-c.jhjj.paas.test → http://localhost:8889",
+                              "content": "www.example1.com → http://localhost:8889",
                               "fontFamily": "$fontM",
                               "fontSize": 11,
                               "fontWeight": "normal"
@@ -2898,7 +2898,7 @@
                               "id": "QI8KN",
                               "name": "Id",
                               "fill": "$fg2",
-                              "content": "pay-ms-test-c.jhjj.paas.test → http://localhost:8890",
+                              "content": "www.example2.com → http://localhost:8890",
                               "fontFamily": "$fontM",
                               "fontSize": 11,
                               "fontWeight": "normal"
@@ -3213,7 +3213,7 @@
                               "id": "CxMTb",
                               "name": "FV",
                               "fill": "$fg",
-                              "content": "pay-ms-test-c.jhjj.paas.test",
+                              "content": "www.example2.com",
                               "fontFamily": "$fontM",
                               "fontSize": 14,
                               "fontWeight": "normal"
@@ -3298,7 +3298,7 @@
                           "fill": "$fg2",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "pay-ms-test-c.jhjj.paas.test scene-mock://",
+                          "content": "www.example2.com scene-mock://",
                           "fontFamily": "$fontM",
                           "fontSize": 12,
                           "fontWeight": "normal"
@@ -3985,7 +3985,7 @@
                     {
                       "type": "frame",
                       "id": "SDVcl",
-                      "name": "Row microcredit",
+                      "name": "Row example",
                       "width": "fill_container",
                       "height": 52,
                       "fill": "$surface",
@@ -4013,7 +4013,7 @@
                               "id": "gkkEj",
                               "name": "Name",
                               "fill": "$fg",
-                              "content": "微贷后端",
+                              "content": "例子",
                               "fontFamily": "$fontB",
                               "fontSize": 13,
                               "fontWeight": "600"
@@ -4059,7 +4059,7 @@
                               "id": "XDU7O",
                               "name": "Id",
                               "fill": "$fg2",
-                              "content": "microcredit",
+                              "content": "example",
                               "fontFamily": "$fontM",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -4107,7 +4107,7 @@
                               "id": "qaFuu",
                               "name": "Id",
                               "fill": "$fg2",
-                              "content": "microcredit-ms-test-c.jhjj.paas.test → http://localhost:8889",
+                              "content": "www.example1.com → http://localhost:8889",
                               "fontFamily": "$fontM",
                               "fontSize": 11,
                               "fontWeight": "normal"
@@ -4317,7 +4317,7 @@
                               "id": "WcZpq",
                               "name": "Id",
                               "fill": "$fg2",
-                              "content": "pay-ms-test-c.jhjj.paas.test → http://localhost:8890",
+                              "content": "www.example2.com → http://localhost:8890",
                               "fontFamily": "$fontM",
                               "fontSize": 11,
                               "fontWeight": "normal"
@@ -4632,7 +4632,7 @@
                               "id": "pjiCA",
                               "name": "FV",
                               "fill": "$fg",
-                              "content": "microcredit-ms-test-c.jhjj.paas.test",
+                              "content": "www.example1.com",
                               "fontFamily": "$fontM",
                               "fontSize": 14,
                               "fontWeight": "normal"
@@ -4670,7 +4670,7 @@
                               "fill": "$fg",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "该 host 已被项目「微贷后端」使用，host 全工作区唯一。",
+                              "content": "该 host 已被项目「例子」使用，host 全工作区唯一。",
                               "fontFamily": "$fontB",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -4755,7 +4755,7 @@
                           "fill": "$fg2",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "microcredit-ms-test-c.jhjj.paas.test scene-mock://",
+                          "content": "www.example1.com scene-mock://",
                           "fontFamily": "$fontM",
                           "fontSize": 12,
                           "fontWeight": "normal"
@@ -5442,7 +5442,7 @@
                     {
                       "type": "frame",
                       "id": "Y7SiK3",
-                      "name": "Row microcredit",
+                      "name": "Row example",
                       "width": "fill_container",
                       "height": 52,
                       "fill": "$surface",
@@ -5470,7 +5470,7 @@
                               "id": "EYXgj",
                               "name": "Name",
                               "fill": "$fg",
-                              "content": "微贷后端",
+                              "content": "例子",
                               "fontFamily": "$fontB",
                               "fontSize": 13,
                               "fontWeight": "600"
@@ -5516,7 +5516,7 @@
                               "id": "iXQA0",
                               "name": "Id",
                               "fill": "$fg2",
-                              "content": "microcredit",
+                              "content": "example",
                               "fontFamily": "$fontM",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -5564,7 +5564,7 @@
                               "id": "tydUy",
                               "name": "Id",
                               "fill": "$fg2",
-                              "content": "microcredit-ms-test-c.jhjj.paas.test → http://localhost:8889",
+                              "content": "www.example1.com → http://localhost:8889",
                               "fontFamily": "$fontM",
                               "fontSize": 11,
                               "fontWeight": "normal"
@@ -5774,7 +5774,7 @@
                               "id": "l4lVso",
                               "name": "Id",
                               "fill": "$fg2",
-                              "content": "pay-ms-test-c.jhjj.paas.test → http://localhost:8890",
+                              "content": "www.example2.com → http://localhost:8890",
                               "fontFamily": "$fontM",
                               "fontSize": 11,
                               "fontWeight": "normal"

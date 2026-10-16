@@ -55,11 +55,10 @@ npm run build
 ```json
 "hosts": [
   "http://localhost:8889",
-  "http://microloan-microcredit-test-c.jhjj.spider.test"
 ]
 ```
 
-对应规则是 `localhost:8889 scene-mock://` 和 `microloan-microcredit-test-c.jhjj.spider.test scene-mock://`。其中 `localhost:8889` 若正好是 Whistle 自己的端口，请求仍进管理页，这条规则匹配不到。
+对应规则是 `localhost:8889 scene-mock://`。其中 `localhost:8889` 若正好是 Whistle 自己的端口，请求仍进管理页，这条规则匹配不到。
 
 ```mermaid
 flowchart TD
@@ -107,7 +106,7 @@ flowchart TD
 
 method 优先用原始请求里非 GET、非 HEAD 的方法。Whistle 把方法报成 GET，但 body 是 JSON 或表单时，按 POST 匹配。
 
-路径从 `fullUrl`、`originalReq.fullUrl`、`x-whistle-full-url`、`relativeUrl` 等字段收集。短协议 `scene-mock://api/v1/couponPack/sale` 还原为 `/api/v1/couponPack/sale`，第一段 `api` 不当成 host；带真实 host 的 `scene-mock://microloan.example/api/v1/couponPack/sale` 只保留 `/api/...`。
+路径从 `fullUrl`、`originalReq.fullUrl`、`x-whistle-full-url`、`relativeUrl` 等字段收集。短协议 `scene-mock://api/v1/orders/list` 还原为 `/api/v1/orders/list`，第一段 `api` 不当成 host；带真实 host 的 `scene-mock://shop.example/api/v1/orders/list` 只保留 `/api/...`。
 
 ### 未命中之后
 

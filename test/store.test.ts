@@ -6,7 +6,7 @@ import path from 'node:path';
 import { Store } from '../src/core/store';
 import { HttpError } from '../src/core/http-error';
 
-const PID = 'microcredit';
+const PID = 'example';
 
 async function makeRoot() {
   const dir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'scene-mock-'));
@@ -176,7 +176,7 @@ describe('store', () => {
     const store = await loaded();
     const text = store.pluginRulesText();
     assert.match(text, /^\/api\/ scene-mock:\/\/$/m);
-    assert.match(text, /^microcredit-ms-test-c\.jhjj\.paas\.test scene-mock:\/\/$/m);
+    assert.match(text, /^www\.example1\.com scene-mock:\/\/$/m);
     // 新建项目后规则带上新 host（项目 host 一律去端口存储）
     await store.createProject({
       id: 'local',
@@ -207,7 +207,7 @@ describe('store', () => {
     await assert.rejects(
       () => store.createProject({
         name: '重复',
-        host: 'HTTP://microcredit-ms-test-c.jhjj.paas.test/',
+        host: 'HTTP://www.example1.com/',
       }),
       (err: unknown) => (
         err instanceof HttpError && err.status === 409 && err.code === 'duplicate_host'
@@ -218,28 +218,28 @@ describe('store', () => {
   it('keeps a path prefix on the proxied host and matches only that path', async () => {
     const store = await loaded();
     const created = await store.createProject({
-      id: 'yrxd',
-      name: '宜人',
-      host: 'http://yrxd.test.creditease.cn/cc',
-      target: 'http://yxhms.paas.corp/',
+      id: 'shop',
+      name: '示例',
+      host: 'http://www.example2.com/cc',
+      target: 'http://www.example1.com/',
     });
-    assert.equal(created.host, 'yrxd.test.creditease.cn/cc');
-    assert.equal(created.target, 'http://yxhms.paas.corp');
-    assert.match(store.pluginRulesText(), /^yrxd\.test\.creditease\.cn\/cc scene-mock:\/\/$/m);
-    assert.equal(store.resolveProject('yrxd.test.creditease.cn', '/cc')?.id, 'yrxd');
-    assert.equal(store.resolveProject('yrxd.test.creditease.cn', '/cc/api')?.id, 'yrxd');
-    assert.equal(store.resolveProject('yrxd.test.creditease.cn', '/dd'), null);
-    assert.equal(store.resolveProject('yrxd.test.creditease.cn', '/other'), null);
+    assert.equal(created.host, 'www.example2.com/cc');
+    assert.equal(created.target, 'http://www.example1.com');
+    assert.match(store.pluginRulesText(), /^www\.example2\.com\/cc scene-mock:\/\/$/m);
+    assert.equal(store.resolveProject('www.example2.com', '/cc')?.id, 'shop');
+    assert.equal(store.resolveProject('www.example2.com', '/cc/api')?.id, 'shop');
+    assert.equal(store.resolveProject('www.example2.com', '/dd'), null);
+    assert.equal(store.resolveProject('www.example2.com', '/other'), null);
     const other = await store.createProject({
-      id: 'yrxd-yy',
-      name: '宜人-yy',
-      host: 'http://yrxd.test.creditease.cn/yy',
+      id: 'shop-yy',
+      name: '示例-yy',
+      host: 'http://www.example2.com/yy',
       target: '',
     });
-    assert.equal(other.host, 'yrxd.test.creditease.cn/yy');
-    assert.equal(store.resolveProject('yrxd.test.creditease.cn', '/yy/abc')?.id, 'yrxd-yy');
-    assert.equal(store.resolveProject('yrxd.test.creditease.cn', '/abc'), null);
-    assert.equal(store.resolveProject('YRXD.test.creditease.cn:80', '/cc/x')?.id, 'yrxd');
+    assert.equal(other.host, 'www.example2.com/yy');
+    assert.equal(store.resolveProject('www.example2.com', '/yy/abc')?.id, 'shop-yy');
+    assert.equal(store.resolveProject('www.example2.com', '/abc'), null);
+    assert.equal(store.resolveProject('WWW.example2.com:80', '/cc/x')?.id, 'shop');
   });
 
   it('matches the longer host path when one project has several proxy pairs', async () => {
@@ -248,29 +248,29 @@ describe('store', () => {
       id: 'mobile',
       name: 'mobile',
       proxies: [
-        { host: 'http://yrxd.test.creditease.cn/cc', target: 'http://localhost:8080' },
-        { host: 'http://yrxd.test.creditease.cn', target: 'http://localhost:9090' },
+        { host: 'http://www.example2.com/cc', target: 'http://localhost:8080' },
+        { host: 'http://www.example2.com', target: 'http://localhost:9090' },
       ],
     });
-    assert.equal(paired.host, 'yrxd.test.creditease.cn/cc');
+    assert.equal(paired.host, 'www.example2.com/cc');
     assert.equal(paired.target, 'http://localhost:8080');
     assert.equal(paired.proxies.length, 2);
     assert.equal(paired.proxies[1].target, 'http://localhost:9090');
-    assert.match(store.pluginRulesText(), /^yrxd\.test\.creditease\.cn\/cc scene-mock:\/\/$/m);
-    assert.match(store.pluginRulesText(), /^yrxd\.test\.creditease\.cn scene-mock:\/\/$/m);
-    assert.equal(store.matchProxy('yrxd.test.creditease.cn', '/cc/login')?.proxy.host, 'yrxd.test.creditease.cn/cc');
-    assert.equal(store.matchProxy('yrxd.test.creditease.cn', '/cc/login')?.proxy.target, 'http://localhost:8080');
-    assert.equal(store.matchProxy('yrxd.test.creditease.cn', '/static/js/lodash.js')?.proxy.host, 'yrxd.test.creditease.cn');
-    assert.equal(store.matchProxy('yrxd.test.creditease.cn', '/static/js/lodash.js')?.proxy.target, 'http://localhost:9090');
-    assert.equal(store.resolveProject('yrxd.test.creditease.cn', '/static/js/lodash.js')?.id, 'mobile');
+    assert.match(store.pluginRulesText(), /^www\.example2\.com\/cc scene-mock:\/\/$/m);
+    assert.match(store.pluginRulesText(), /^www\.example2\.com scene-mock:\/\/$/m);
+    assert.equal(store.matchProxy('www.example2.com', '/cc/login')?.proxy.host, 'www.example2.com/cc');
+    assert.equal(store.matchProxy('www.example2.com', '/cc/login')?.proxy.target, 'http://localhost:8080');
+    assert.equal(store.matchProxy('www.example2.com', '/static/js/lodash.js')?.proxy.host, 'www.example2.com');
+    assert.equal(store.matchProxy('www.example2.com', '/static/js/lodash.js')?.proxy.target, 'http://localhost:9090');
+    assert.equal(store.resolveProject('www.example2.com', '/static/js/lodash.js')?.id, 'mobile');
   });
 
   it('resolves project by host and passes through unknown hosts', async () => {
     const store = await loaded();
-    const hit = store.resolveProject('microcredit-ms-test-c.jhjj.paas.test');
+    const hit = store.resolveProject('www.example1.com');
     assert.equal(hit?.id, PID);
     // 带端口也能命中
-    const withPort = store.resolveProject('microcredit-ms-test-c.jhjj.paas.test:443');
+    const withPort = store.resolveProject('www.example1.com:443');
     assert.equal(withPort?.id, PID);
     // 未知 host 不归属任何项目（透传），并记录 unresolvedHosts
     const fallback = store.resolveProject('unknown.example.com');
@@ -294,9 +294,9 @@ describe('store', () => {
 
   it('renames project id', async () => {
     const store = await loaded();
-    await store.updateProject(PID, { newId: 'microloan' });
-    assert.equal(store.getProject('microloan').host, 'microcredit-ms-test-c.jhjj.paas.test');
-    const hit = store.resolveProject('microcredit-ms-test-c.jhjj.paas.test');
-    assert.equal(hit?.id, 'microloan');
+    await store.updateProject(PID, { newId: 'sample' });
+    assert.equal(store.getProject('sample').host, 'www.example1.com');
+    const hit = store.resolveProject('www.example1.com');
+    assert.equal(hit?.id, 'sample');
   });
 });

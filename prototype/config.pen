@@ -1069,7 +1069,7 @@
                               "fill": "$fg",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "热加载：projects/microcredit/data/create-order/validation-error.json  JSON 语法错误，已保留上一份合法内容。",
+                              "content": "热加载：projects/example/data/create-order/validation-error.json  JSON 语法错误，已保留上一份合法内容。",
                               "fontFamily": "$fontB",
                               "fontSize": 13,
                               "fontWeight": "normal"
@@ -1107,7 +1107,7 @@
                               "fill": "$fg",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "存在未识别 host（如 localhost:8889）的请求经 matchPatterns 进入插件，已归入当前项目 microcredit；建议为其新建项目。",
+                              "content": "存在未识别 host（如 localhost:8889）的请求经 matchPatterns 进入插件，已归入当前项目 example；建议为其新建项目。",
                               "fontFamily": "$fontB",
                               "fontSize": 13,
                               "fontWeight": "normal"
@@ -1602,6 +1602,5 @@
       "type": "number",
       "value": 8
     }
-  },
-  "fileToken": "8c6c4104-ce12-4a96-a361-32ac7346ba56"
+  }
 }

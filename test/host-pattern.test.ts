@@ -11,8 +11,8 @@ describe('host pattern', () => {
   it('drops the scheme and default port', () => {
     assert.equal(hostToPattern('http://localhost:8889'), 'localhost:8889');
     assert.equal(
-      hostToPattern('http://microloan-microcredit-test-c.jhjj.spider.test'),
-      'microloan-microcredit-test-c.jhjj.spider.test',
+      hostToPattern('http://www.example2.com'),
+      'www.example2.com',
     );
     assert.equal(hostToPattern('https://api.example.com/api/'), 'api.example.com/api/');
     assert.equal(hostToPattern('https://api.example.com:8443'), 'api.example.com:8443');
@@ -22,12 +22,12 @@ describe('host pattern', () => {
     assert.deepEqual(
       rulePatterns(
         ['/api/', 'http://localhost:8889'],
-        ['http://localhost:8889', 'http://microloan-microcredit-test-c.jhjj.spider.test'],
+        ['http://localhost:8889', 'http://www.example2.com'],
       ),
       [
         '/api/',
         'localhost:8889',
-        'microloan-microcredit-test-c.jhjj.spider.test',
+        'www.example2.com',
       ],
     );
   });

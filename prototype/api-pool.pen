@@ -624,7 +624,7 @@
                       "id": "kreCy",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/projects/microcredit/apis",
+                      "content": "#/projects/example/apis",
                       "fontFamily": "$fontM",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -654,7 +654,7 @@
                       "id": "gLvKFV",
                       "name": "ProjHint",
                       "fill": "$fg2",
-                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "content": "当前项目：例子（www.example1.com）",
                       "fontFamily": "$fontB",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -3038,7 +3038,7 @@
                       "id": "iJQ6C",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/projects/microcredit/apis",
+                      "content": "#/projects/example/apis",
                       "fontFamily": "$fontM",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -3068,7 +3068,7 @@
                       "id": "xxBI8g",
                       "name": "ProjHint",
                       "fill": "$fg2",
-                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "content": "当前项目：例子（www.example1.com）",
                       "fontFamily": "$fontB",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -4700,7 +4700,7 @@
                               "id": "z5zVf1",
                               "name": "F",
                               "fill": "$fg2",
-                              "content": "projects/microcredit/data/get-orders/list.json",
+                              "content": "projects/example/data/get-orders/list.json",
                               "fontFamily": "$fontM",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -4738,7 +4738,7 @@
                               "id": "w2cooV",
                               "name": "F",
                               "fill": "$fg2",
-                              "content": "projects/microcredit/data/get-orders/empty.json",
+                              "content": "projects/example/data/get-orders/empty.json",
                               "fontFamily": "$fontM",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -4776,7 +4776,7 @@
                               "id": "ylyBO",
                               "name": "F",
                               "fill": "$fg2",
-                              "content": "projects/microcredit/data/get-orders/server-error.json",
+                              "content": "projects/example/data/get-orders/server-error.json",
                               "fontFamily": "$fontM",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -4961,7 +4961,7 @@
                   "fill": "$fg",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "data：projects/microcredit/data/get-orders/list.json ｜ Scene：projects/microcredit/scenes/normal-order.json ｜ 被 2 个 Scene 引用，保存将 fork",
+                  "content": "data：projects/example/data/get-orders/list.json ｜ Scene：projects/example/scenes/normal-order.json ｜ 被 2 个 Scene 引用，保存将 fork",
                   "fontFamily": "$fontM",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -5584,7 +5584,7 @@
                       "id": "sbY3I",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/projects/microcredit/apis",
+                      "content": "#/projects/example/apis",
                       "fontFamily": "$fontM",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -5614,7 +5614,7 @@
                       "id": "6ndhtG",
                       "name": "ProjHint",
                       "fill": "$fg2",
-                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "content": "当前项目：例子（www.example1.com）",
                       "fontFamily": "$fontB",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -7919,6 +7919,5 @@
       "type": "number",
       "value": 8
     }
-  },
-  "fileToken": "3085451c-f2c8-461d-b9b3-57773ee8754b"
+  }
 }

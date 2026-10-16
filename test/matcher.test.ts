@@ -40,40 +40,40 @@ describe('matcher', () => {
 
   it('does not treat plugin protocol first segment as host', () => {
     assert.equal(
-      pathnameFromPluginProtocol('scene-mock://api/v1/couponPack/sale'),
-      '/api/v1/couponPack/sale',
+      pathnameFromPluginProtocol('scene-mock://api/v1/orders/list'),
+      '/api/v1/orders/list',
     );
     assert.equal(
-      pathnameOf('scene-mock://api/v1/couponPack/sale'),
-      '/api/v1/couponPack/sale',
+      pathnameOf('scene-mock://api/v1/orders/list'),
+      '/api/v1/orders/list',
     );
   });
 
   it('keeps host/path plugin URLs', () => {
     assert.equal(
       pathnameFromPluginProtocol(
-        'scene-mock://microloan-microcredit-test-c.jhjj.spider.test/api/v1/couponPack/sale',
+        'scene-mock://www.example2.com/api/v1/orders/list',
       ),
-      '/api/v1/couponPack/sale',
+      '/api/v1/orders/list',
     );
   });
 
   it('collects pathnames from whistle full-url header', () => {
     const paths = candidatePathnames({
-      fullUrl: 'scene-mock://api/v1/couponPack/sale',
+      fullUrl: 'scene-mock://api/v1/orders/list',
       headers: {
         'x-whistle-full-url':
-          'http%3A%2F%2Fmicroloan-microcredit-test-c.jhjj.spider.test%2Fapi%2Fv1%2FcouponPack%2Fsale',
+          'http%3A%2F%2Fwww.example2.com%2Fapi%2Fv1%2Forders%2Flist',
       },
     });
-    assert.ok(paths.includes('/api/v1/couponPack/sale'));
+    assert.ok(paths.includes('/api/v1/orders/list'));
   });
 
   it('rebuilds /api/ prefix from relativeUrl', () => {
     const paths = candidatePathnames({
-      relativeUrl: 'v1/couponPack/sale',
+      relativeUrl: 'v1/orders/list',
     });
-    assert.ok(paths.includes('/api/v1/couponPack/sale'));
+    assert.ok(paths.includes('/api/v1/orders/list'));
   });
 
   it('infers POST when whistle reports GET but body is json', () => {

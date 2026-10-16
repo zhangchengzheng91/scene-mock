@@ -1,6 +1,6 @@
 {
-  "name": "微贷后端",
-  "host": "microcredit-ms-test-c.jhjj.paas.test",
+  "name": "example",
+  "host": "www.example1.com",
   "target": "http://localhost:8889",
   "activeScenes": ["normal-order"]
 }

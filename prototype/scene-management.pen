@@ -735,7 +735,7 @@
                       "id": "B0GVrI",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/projects/microcredit/scenes",
+                      "content": "#/projects/example/scenes",
                       "fontFamily": "$fontM",
                       "fontSize": 11,
                       "fontWeight": "normal"
@@ -765,7 +765,7 @@
                       "id": "go6t0I",
                       "name": "ProjHint",
                       "fill": "$fg2",
-                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "content": "当前项目：例子（www.example1.com）",
                       "fontFamily": "$fontB",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -3422,7 +3422,7 @@
                       "id": "j2CtW",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/projects/microcredit/scenes",
+                      "content": "#/projects/example/scenes",
                       "fontFamily": "$fontM",
                       "fontSize": 11,
                       "fontWeight": "normal"
@@ -3452,7 +3452,7 @@
                       "id": "t7Am1m",
                       "name": "ProjHint",
                       "fill": "$fg2",
-                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "content": "当前项目：例子（www.example1.com）",
                       "fontFamily": "$fontB",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -5080,7 +5080,7 @@
                           "fill": "$fg2",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "项目「微贷后端」内，「下单异常流」与已激活的「正常下单」共用同一 api-id。冲突按 Scene 整组切换，不按接口拆开，不影响其它项目。",
+                          "content": "项目「例子」内，「下单异常流」与已激活的「正常下单」共用同一 api-id。冲突按 Scene 整组切换，不按接口拆开，不影响其它项目。",
                           "fontFamily": "$fontB",
                           "fontSize": 12,
                           "fontWeight": "normal"
@@ -5556,7 +5556,7 @@
                       "id": "Ig57q",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/projects/microcredit/scenes",
+                      "content": "#/projects/example/scenes",
                       "fontFamily": "$fontM",
                       "fontSize": 11,
                       "fontWeight": "normal"
@@ -5586,7 +5586,7 @@
                       "id": "u5ec3G",
                       "name": "ProjHint",
                       "fill": "$fg2",
-                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "content": "当前项目：例子（www.example1.com）",
                       "fontFamily": "$fontB",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -8174,7 +8174,7 @@
                   "fill": "$fg",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "data：projects/microcredit/data/get-orders/list.json ｜ Scene：projects/microcredit/scenes/normal-order.json ｜ 被 2 个 Scene 引用，保存将 fork",
+                  "content": "data：projects/example/data/get-orders/list.json ｜ Scene：projects/example/scenes/normal-order.json ｜ 被 2 个 Scene 引用，保存将 fork",
                   "fontFamily": "$fontM",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -8817,7 +8817,7 @@
                       "id": "sieFT",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/projects/microcredit/scenes",
+                      "content": "#/projects/example/scenes",
                       "fontFamily": "$fontM",
                       "fontSize": 11,
                       "fontWeight": "normal"
@@ -8847,7 +8847,7 @@
                       "id": "HPkuyY",
                       "name": "ProjHint",
                       "fill": "$fg2",
-                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "content": "当前项目：例子（www.example1.com）",
                       "fontFamily": "$fontB",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -12048,6 +12048,5 @@
       "type": "number",
       "value": 8
     }
-  },
-  "fileToken": "1f7b8161-9751-4065-9bb9-34e7762a3d97"
+  }
 }

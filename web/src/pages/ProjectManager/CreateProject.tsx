@@ -127,7 +127,7 @@ export default function CreateProject({
             </Typography.Paragraph>
           )}
           <Form.Item name="name" label="项目名称" rules={[{ required: true }]}>
-            <Input placeholder="微贷后端" />
+            <Input placeholder="请输入项目名称" />
           </Form.Item>
           <Form.Item
             name="id"
@@ -151,7 +151,7 @@ export default function CreateProject({
             ]}
           >
             <Input
-              placeholder="microcredit"
+              placeholder="请输入项目 ID"
               spellCheck={false}
               disabled={Boolean(editing)}
             />
