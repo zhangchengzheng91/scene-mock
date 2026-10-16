@@ -89,6 +89,24 @@ export default function SceneDetailPage({
     }
   };
 
+  const checkedCount = scene.entries.filter((row) => scene.active && row.enabled).length;
+  const allChecked = scene.entries.length > 0 && checkedCount === scene.entries.length;
+
+  const toggleAll = async (enabled: boolean) => {
+    try {
+      await api.setSceneProxies(pid, scene.id, enabled);
+      message.success(enabled ? "已激活全部接口" : "已关闭全部接口");
+      load();
+      refresh();
+    } catch (err) {
+      if (isApiError(err) && err.error === "scene_conflict") {
+        onConflict(err.details as ConflictPayload);
+        return;
+      }
+      message.error(isApiError(err) ? err.message : String(err));
+    }
+  };
+
   return (
     <Card className="scene-expand" size="small">
       <Space direction="vertical" size="middle" style={{ width: "100%" }}>
@@ -112,7 +130,14 @@ export default function SceneDetailPage({
           pagination={false}
           columns={[
             {
-              title: "",
+              title: (
+                <Checkbox
+                  checked={allChecked}
+                  indeterminate={checkedCount > 0 && !allChecked}
+                  disabled={scene.entries.length === 0}
+                  onChange={(e) => toggleAll(e.target.checked)}
+                />
+              ),
               width: 40,
               align: "left",
               render: (_, row) => (
@@ -124,6 +149,7 @@ export default function SceneDetailPage({
             },
             {
               title: "描述",
+              width: "10%",
               dataIndex: "describe",
               align: "left",
               render: (value: string) => (
@@ -133,6 +159,7 @@ export default function SceneDetailPage({
             {
               title: "接口",
               align: "left",
+              width: "20%",
               render: (_, row) => (
                 <span>
                   <MethodTag method={row.method} />
@@ -154,7 +181,7 @@ export default function SceneDetailPage({
             {
               title: "PASS 关键字",
               dataIndex: "keyword",
-              width: 240,
+              width: "20%",
               align: "left",
               render: (value: string) =>
                 value ? (
@@ -166,6 +193,7 @@ export default function SceneDetailPage({
             { title: "delay", dataIndex: "delay", width: 80, align: "center" },
             {
               title: "variant",
+              width: '50',
               align: "left",
               render: (_, row) => (
                 <span>
@@ -191,7 +219,7 @@ export default function SceneDetailPage({
               render: (_, row) => (
                 <Space>
                   <Button size="small" onClick={() => setEditing(row)}>
-                    编辑返回值
+                    编辑
                   </Button>
                   <Button
                     size="small"

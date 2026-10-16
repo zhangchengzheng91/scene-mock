@@ -9,12 +9,16 @@ export default function CreateScene({
   projects,
   copyFrom,
   onCopyClose,
+  editing = null,
+  onEditingClose,
   onCreated,
 }: {
   pid: string;
   projects: ProjectSummary[];
   copyFrom: (SceneListItem & { pid?: string }) | null;
   onCopyClose: () => void;
+  editing?: (SceneListItem & { pid?: string }) | null;
+  onEditingClose?: () => void;
   onCreated: () => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -35,17 +39,31 @@ export default function CreateScene({
   }, [copyFrom, pid]);
 
   useEffect(() => {
+    if (!editing) {
+      return;
+    }
+    pending.current = {
+      projectId: editing.pid || pid,
+      id: editing.id,
+      name: editing.name,
+      desc: editing.desc || "",
+    };
+    setOpen(true);
+  }, [editing, pid]);
+
+  useEffect(() => {
     if (!open || !pending.current) {
       return;
     }
     form.resetFields();
     form.setFieldsValue(pending.current);
     pending.current = null;
-  }, [open, copyFrom, form]);
+  }, [open, copyFrom, editing, form]);
 
   const close = () => {
     setOpen(false);
     onCopyClose();
+    onEditingClose?.();
   };
 
   const submit = async () => {
@@ -56,6 +74,16 @@ export default function CreateScene({
       return;
     }
     try {
+      if (editing) {
+        await api.updateScene(editing.pid || pid, editing.id, {
+          name: values.name,
+          desc: values.desc,
+        });
+        message.success("已更新");
+        close();
+        onCreated();
+        return;
+      }
       await api.createScene(values.projectId, {
         id: values.id,
         name: values.name,
@@ -78,6 +106,7 @@ export default function CreateScene({
         style={{ marginLeft: "8px" }}
         onClick={() => {
           onCopyClose();
+          onEditingClose?.();
           const next = {
             projectId: pid || undefined,
             id: "",
@@ -97,7 +126,13 @@ export default function CreateScene({
         新建 Scene
       </Button>
       <Modal
-        title={copyFrom ? `从「${copyFrom.name}」复制 Scene` : "新建 Scene"}
+        title={
+          editing
+            ? "编辑 Scene 信息"
+            : copyFrom
+              ? `从「${copyFrom.name}」复制 Scene`
+              : "新建 Scene"
+        }
         open={open}
         onCancel={close}
         onOk={submit}
@@ -115,7 +150,7 @@ export default function CreateScene({
           >
             <Select
               placeholder="选择项目"
-              disabled={Boolean(copyFrom)}
+              disabled={Boolean(copyFrom || editing)}
               options={projects.map((p) => ({
                 value: p.id,
                 label: `${p.name}（${p.host || p.id}）`,
@@ -123,7 +158,7 @@ export default function CreateScene({
             />
           </Form.Item>
           <Form.Item name="id" label="id" rules={[{ required: true, message: "请填写 id" }]}>
-            <Input placeholder="normal-order" />
+            <Input placeholder="normal-order" disabled={Boolean(editing)} />
           </Form.Item>
           <Form.Item name="name" label="名称" rules={[{ required: true, message: "请填写名称" }]}>
             <Input placeholder="正常下单" />

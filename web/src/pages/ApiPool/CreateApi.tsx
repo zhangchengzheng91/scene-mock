@@ -17,29 +17,62 @@ function urlToPascalId(url: string): string {
     .join('');
 }
 
+export interface EditingApi {
+  projectId: string;
+  id: string;
+  method: string;
+  url: string;
+  desc?: string;
+}
+
 export default function CreateApi({
   projects,
   projectId,
   onCreated,
+  editing = null,
+  onEditingClose,
 }: {
   projects: ProjectSummary[];
   projectId?: string;
   onCreated: () => void;
+  editing?: EditingApi | null;
+  onEditingClose?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const pending = useRef<Record<string, string | undefined> | null>(null);
+  const isEdit = Boolean(editing);
+  const visible = open || isEdit;
 
   useEffect(() => {
-    if (!open || !pending.current) {
+    if (!editing) {
+      return;
+    }
+    pending.current = {
+      projectId: editing.projectId,
+      method: editing.method,
+      url: editing.url,
+      id: editing.id,
+      desc: editing.desc,
+    };
+  }, [editing]);
+
+  useEffect(() => {
+    if (!visible || !pending.current) {
       return;
     }
     form.resetFields();
     form.setFieldsValue(pending.current);
     pending.current = null;
-  }, [open, form]);
+  }, [visible, editing, form]);
 
-  const close = () => setOpen(false);
+  const close = () => {
+    if (isEdit) {
+      onEditingClose?.();
+      return;
+    }
+    setOpen(false);
+  };
 
   const openModal = () => {
     const next = {
@@ -64,6 +97,27 @@ export default function CreateApi({
     try {
       values = await form.validateFields();
     } catch {
+      return;
+    }
+    if (editing) {
+      try {
+        const nextId = urlToPascalId(values.url);
+        if (!nextId) {
+          form.setFields([{ name: 'id', errors: ['无法从 URL 生成 id'] }]);
+          return;
+        }
+        await api.updateApi(editing.projectId, editing.id, {
+          method: values.method,
+          url: values.url,
+          desc: values.desc,
+          ...(nextId !== editing.id ? { newId: nextId } : {}),
+        });
+        message.success('已更新');
+        onEditingClose?.();
+        onCreated();
+      } catch (err) {
+        message.error(isApiError(err) ? err.message : String(err));
+      }
       return;
     }
     const id = urlToPascalId(values.url);
@@ -91,7 +145,7 @@ export default function CreateApi({
       <Button type="primary" icon={<PlusOutlined />} onClick={openModal}>
         注册接口
       </Button>
-      <Modal title="注册接口" open={open} onCancel={close} onOk={submit}>
+      <Modal title={isEdit ? '编辑接口' : '注册接口'} open={visible} onCancel={close} onOk={submit}>
         <Form
           form={form}
           layout="vertical"
@@ -108,6 +162,7 @@ export default function CreateApi({
             rules={[{ required: true, message: '请选择项目' }]}
           >
             <Select
+              disabled={isEdit}
               placeholder="选择项目"
               options={projects.map((p) => ({
                 value: p.id,

@@ -4,11 +4,9 @@ import {
   Card,
   Form,
   Input,
-  Modal,
   Popconfirm,
   Select,
   Space,
-  Switch,
   Table,
   Typography,
   message,
@@ -51,9 +49,8 @@ export default function ScenesPage({
   const [project, setProject] = useState<ProjectDetail | null>(null);
   const [keyword, setKeyword] = useState("");
   const [copyFrom, setCopyFrom] = useState<AllScenesRow | null>(null);
+  const [editing, setEditing] = useState<AllScenesRow | null>(null);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
-  const [metaOpen, setMetaOpen] = useState(false);
-  const [meta, setMeta] = useState({ pid: "", id: "", name: "", desc: "" });
 
   const runtimeKey = useMemo(() => {
     const map = status?.projects;
@@ -161,25 +158,6 @@ export default function ScenesPage({
 
   const rowKey = (row: AllScenesRow) => `${row.pid}/${row.id}`;
 
-  const toggle = async (row: AllScenesRow, checked: boolean) => {
-    try {
-      await api.setSceneProxies(row.pid, row.id, checked);
-      message.success(
-        checked
-          ? `已激活 ${row.name} 全部代理`
-          : `已关闭 ${row.name} 全部代理`,
-      );
-      refresh();
-      load();
-    } catch (err) {
-      if (isApiError(err) && err.error === "scene_conflict") {
-        onConflict(err.details as ConflictPayload);
-        return;
-      }
-      message.error(isApiError(err) ? err.message : String(err));
-    }
-  };
-
   return (
     <Space direction="vertical" size="large" style={{ width: "100%" }}>
       <Card size="small">
@@ -220,6 +198,8 @@ export default function ScenesPage({
             projects={projects}
             copyFrom={copyFrom}
             onCopyClose={() => setCopyFrom(null)}
+            editing={editing}
+            onEditingClose={() => setEditing(null)}
             onCreated={() => {
               refresh();
               load();
@@ -270,20 +250,6 @@ export default function ScenesPage({
         }}
         columns={[
           {
-            title: "项目",
-            width: 180,
-            render: (_, row) => (
-              <span>
-                <Typography.Text strong>{row.projectName}</Typography.Text>
-                <div>
-                  <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                    {row.projectHost || row.pid}
-                  </Typography.Text>
-                </div>
-              </span>
-            ),
-          },
-          {
             title: "Scene",
             width: 160,
             render: (_, row) => (
@@ -298,25 +264,23 @@ export default function ScenesPage({
             ),
           },
           {
+            title: "项目",
+            width: 180,
+            render: (_, row) => (
+              <span>
+                <Typography.Text strong>{row.projectName}</Typography.Text>
+                <div>
+                  <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                    {row.projectHost || row.pid}
+                  </Typography.Text>
+                </div>
+              </span>
+            ),
+          },
+          {
             title: "接口",
             width: 90,
             render: (_, row) => `${row.active ? row.enabledCount : 0}/${row.apiCount}`,
-          },
-          {
-            title: "激活",
-            width: 80,
-            render: (_, row) => (
-              <span onClick={(e) => e.stopPropagation()}>
-                <Switch
-                  checked={
-                    row.apiCount === 0
-                      ? row.active
-                      : row.active && row.enabledCount > 0
-                  }
-                  onChange={(checked) => toggle(row, checked)}
-                />
-              </span>
-            ),
           },
           {
             title: "最近修改",
@@ -329,22 +293,17 @@ export default function ScenesPage({
             width: 340,
             render: (_, row) => (
               <Space wrap onClick={(e) => e.stopPropagation()}>
-                <Button size="small" onClick={() => setCopyFrom(row)}>
+                <Button size="small" onClick={() => {
+                  setEditing(null);
+                  setCopyFrom(row);
+                }}>
                   复制
                 </Button>
-                <Button
-                  size="small"
-                  onClick={() => {
-                    setMeta({
-                      pid: row.pid,
-                      id: row.id,
-                      name: row.name,
-                      desc: row.desc || "",
-                    });
-                    setMetaOpen(true);
-                  }}
-                >
-                  编辑信息
+                <Button size="small" onClick={() => {
+                  setCopyFrom(null);
+                  setEditing(row);
+                }}>
+                  编辑
                 </Button>
                 <Button
                   size="small"
@@ -390,39 +349,6 @@ export default function ScenesPage({
         ]}
       />
 
-      <Modal
-        title="编辑 Scene 信息"
-        open={metaOpen}
-        onCancel={() => setMetaOpen(false)}
-        onOk={async () => {
-          try {
-            await api.updateScene(meta.pid, meta.id, {
-              name: meta.name,
-              desc: meta.desc,
-            });
-            setMetaOpen(false);
-            refresh();
-            load();
-          } catch (err) {
-            message.error(isApiError(err) ? err.message : String(err));
-          }
-        }}
-      >
-        <Form layout="vertical">
-          <Form.Item label="名称">
-            <Input
-              value={meta.name}
-              onChange={(e) => setMeta({ ...meta, name: e.target.value })}
-            />
-          </Form.Item>
-          <Form.Item label="描述">
-            <Input.TextArea
-              value={meta.desc}
-              onChange={(e) => setMeta({ ...meta, desc: e.target.value })}
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
     </Space>
   );
 }

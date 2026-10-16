@@ -12,7 +12,7 @@ import { HashRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'r
 import { api, eventsUrl } from './api';
 import Banners from './components/Banners';
 import ConflictModal from './components/ConflictModal';
-import ApisPage from './pages/ApisPage';
+import AllApisPage from './pages/ApiPool';
 import ConfigPage from './pages/ConfigPage';
 import ProjectsPage from './pages/ProjectManager';
 import ScenesPage from './pages/ScenePage';
@@ -147,11 +147,7 @@ function Shell() {
             />
             <Route
               path="/apis"
-              element={<ApisPage status={status} />}
-            />
-            <Route
-              path="/projects/:pid/apis"
-              element={<ApisPage status={status} />}
+              element={<AllApisPage status={status} />}
             />
             <Route
               path="/config"
