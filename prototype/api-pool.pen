@@ -489,6 +489,21 @@
                   "gap": 4,
                   "children": [
                     {
+                      "id": "spiTft",
+                      "type": "ref",
+                      "ref": "i0JoSJ",
+                      "name": "Nav 项目管理",
+                      "width": "fill_container",
+                      "descendants": {
+                        "dNn4g": {
+                          "icon": "folder-kanban"
+                        },
+                        "Iwp8U": {
+                          "content": "项目管理"
+                        }
+                      }
+                    },
+                    {
                       "id": "fSCYG",
                       "type": "ref",
                       "ref": "i0JoSJ",
@@ -609,7 +624,7 @@
                       "id": "kreCy",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/apis",
+                      "content": "#/projects/microcredit/apis",
                       "fontFamily": "$fontM",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -629,9 +644,19 @@
                       "id": "J6HV2",
                       "name": "Subtitle",
                       "fill": "$fg2",
-                      "content": "全局接口注册表，Scene 只引用 id，改 URL 只需改一处",
+                      "content": "项目接口注册表，Scene 只引用 id，改 URL 只需改一处",
                       "fontFamily": "$fontB",
                       "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "gLvKFV",
+                      "name": "ProjHint",
+                      "fill": "$fg2",
+                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "fontFamily": "$fontB",
+                      "fontSize": 12,
                       "fontWeight": "normal"
                     }
                   ]
@@ -2878,6 +2903,21 @@
                   "gap": 4,
                   "children": [
                     {
+                      "id": "xFKUE1",
+                      "type": "ref",
+                      "ref": "i0JoSJ",
+                      "name": "Nav 项目管理",
+                      "width": "fill_container",
+                      "descendants": {
+                        "dNn4g": {
+                          "icon": "folder-kanban"
+                        },
+                        "Iwp8U": {
+                          "content": "项目管理"
+                        }
+                      }
+                    },
+                    {
                       "id": "JCoNR",
                       "type": "ref",
                       "ref": "i0JoSJ",
@@ -2998,7 +3038,7 @@
                       "id": "iJQ6C",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/apis",
+                      "content": "#/projects/microcredit/apis",
                       "fontFamily": "$fontM",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -3018,9 +3058,19 @@
                       "id": "FfG6j",
                       "name": "Subtitle",
                       "fill": "$fg2",
-                      "content": "全局接口注册表，Scene 只引用 id，改 URL 只需改一处",
+                      "content": "项目接口注册表，Scene 只引用 id，改 URL 只需改一处",
                       "fontFamily": "$fontB",
                       "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "xxBI8g",
+                      "name": "ProjHint",
+                      "fill": "$fg2",
+                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "fontFamily": "$fontB",
+                      "fontSize": 12,
                       "fontWeight": "normal"
                     }
                   ]
@@ -4603,7 +4653,7 @@
                       "fill": "$fg2",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "该接口仍被 3 个 Scene 引用。确认后将从 apis.json 移除，并清理各 Scene 中的引用与返回值文件。",
+                      "content": "该接口仍被 3 个 Scene 引用。确认后将从项目接口池移除，并清理各 Scene 中的引用与 data/get-orders/ 目录。",
                       "fontFamily": "$fontB",
                       "fontSize": 14,
                       "fontWeight": "normal"
@@ -4650,7 +4700,7 @@
                               "id": "z5zVf1",
                               "name": "F",
                               "fill": "$fg2",
-                              "content": "scenes/normal-order/responses/get-orders.json",
+                              "content": "projects/microcredit/data/get-orders/list.json",
                               "fontFamily": "$fontM",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -4688,7 +4738,7 @@
                               "id": "w2cooV",
                               "name": "F",
                               "fill": "$fg2",
-                              "content": "scenes/empty-data/responses/get-orders.json",
+                              "content": "projects/microcredit/data/get-orders/empty.json",
                               "fontFamily": "$fontM",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -4726,7 +4776,7 @@
                               "id": "ylyBO",
                               "name": "F",
                               "fill": "$fg2",
-                              "content": "scenes/order-error/responses/get-orders.json",
+                              "content": "projects/microcredit/data/get-orders/server-error.json",
                               "fontFamily": "$fontM",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -4911,7 +4961,7 @@
                   "fill": "$fg",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "mocks/scenes/normal-order/responses/get-orders.json",
+                  "content": "data：projects/microcredit/data/get-orders/list.json ｜ Scene：projects/microcredit/scenes/normal-order.json ｜ 被 2 个 Scene 引用，保存将 fork",
                   "fontFamily": "$fontM",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -5399,6 +5449,21 @@
                   "gap": 4,
                   "children": [
                     {
+                      "id": "6htS4A",
+                      "type": "ref",
+                      "ref": "i0JoSJ",
+                      "name": "Nav 项目管理",
+                      "width": "fill_container",
+                      "descendants": {
+                        "dNn4g": {
+                          "icon": "folder-kanban"
+                        },
+                        "Iwp8U": {
+                          "content": "项目管理"
+                        }
+                      }
+                    },
+                    {
                       "id": "JTZ8w",
                       "type": "ref",
                       "ref": "i0JoSJ",
@@ -5519,7 +5584,7 @@
                       "id": "sbY3I",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/apis",
+                      "content": "#/projects/microcredit/apis",
                       "fontFamily": "$fontM",
                       "fontSize": 12,
                       "fontWeight": "normal"
@@ -5539,9 +5604,19 @@
                       "id": "hh1It",
                       "name": "Subtitle",
                       "fill": "$fg2",
-                      "content": "全局接口注册表，Scene 只引用 id，改 URL 只需改一处",
+                      "content": "项目接口注册表，Scene 只引用 id，改 URL 只需改一处",
                       "fontFamily": "$fontB",
                       "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "6ndhtG",
+                      "name": "ProjHint",
+                      "fill": "$fg2",
+                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "fontFamily": "$fontB",
+                      "fontSize": 12,
                       "fontWeight": "normal"
                     }
                   ]

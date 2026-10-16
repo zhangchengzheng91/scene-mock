@@ -25,10 +25,12 @@ import {
 } from "../../types";
 
 export default function SceneDetailPage({
+  pid,
   id,
   refresh,
   onConflict,
 }: {
+  pid: string;
   id: string;
   refresh: () => void;
   onConflict: (payload: ConflictPayload) => void;
@@ -44,20 +46,20 @@ export default function SceneDetailPage({
       return;
     }
     api
-      .scene(id)
+      .scene(pid, id)
       .then(setScene)
       .catch((err) => {
         message.error(isApiError(err) ? err.message : String(err));
       });
     api
-      .apis()
+      .apis(pid)
       .then(setApis)
       .catch(() => undefined);
   };
 
   useEffect(() => {
     load();
-  }, [id]);
+  }, [pid, id]);
 
   if (!scene) {
     return (
@@ -75,7 +77,7 @@ export default function SceneDetailPage({
 
   const toggleProxy = async (row: SceneEntryView, enabled: boolean) => {
     try {
-      await api.upsertSceneApi(scene.id, row.entryId, { enabled });
+      await api.upsertSceneApi(pid, scene.id, row.entryId, { enabled });
       load();
       refresh();
     } catch (err) {
@@ -195,7 +197,7 @@ export default function SceneDetailPage({
                     size="small"
                     onClick={async () => {
                       try {
-                        await api.duplicateSceneApi(scene.id, row.entryId);
+                        await api.duplicateSceneApi(pid, scene.id, row.entryId);
                         message.success("已复制，默认不开启 mock");
                         load();
                         refresh();
@@ -212,7 +214,7 @@ export default function SceneDetailPage({
                     title="从本 Scene 移除该接口？（不删接口池和 data）"
                     onConfirm={async () => {
                       try {
-                        await api.removeSceneApi(scene.id, row.entryId);
+                        await api.removeSceneApi(pid, scene.id, row.entryId);
                         load();
                         refresh();
                       } catch (err) {
@@ -233,6 +235,7 @@ export default function SceneDetailPage({
         />
 
         <ResponseDrawer
+          pid={pid}
           sceneId={scene.id}
           entry={editing}
           open={Boolean(editing)}
@@ -252,7 +255,7 @@ export default function SceneDetailPage({
               return;
             }
             try {
-              await api.upsertSceneApi(scene.id, addApiId, {});
+              await api.upsertSceneApi(pid, scene.id, addApiId, {});
               setAddOpen(false);
               setAddApiId(undefined);
               load();

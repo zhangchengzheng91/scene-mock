@@ -35,6 +35,7 @@ describe('conflict', () => {
       }],
     ]);
     const conflict = detectActivateConflict(
+      'p1',
       scenes.get('auth')!,
       ['orders'],
       scenes,
@@ -63,6 +64,7 @@ describe('conflict', () => {
       }],
     ]);
     const conflict = detectActivateConflict(
+      'p1',
       scenes.get('empty')!,
       ['normal', 'auth'],
       scenes,
@@ -81,7 +83,7 @@ describe('conflict', () => {
       ['a', { id: 'a', name: 'A', apis: { 'get-orders': { data: 'list' } } }],
       ['b', { id: 'b', name: 'B', apis: { 'get-orders': { data: 'empty' } } }],
     ]);
-    const payload = detectActiveSetConflicts(['a', 'b'], scenes, apis, dataIndex);
+    const payload = detectActiveSetConflicts('p1', ['a', 'b'], scenes, apis, dataIndex);
     assert.ok(payload);
     assert.equal(payload!.error, 'active_set_conflict');
   });

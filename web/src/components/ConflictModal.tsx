@@ -20,12 +20,12 @@ export default function ConflictModal({
     try {
       if (action === 'replace' && payload?.error === 'active_set_conflict') {
         const first = payload.involvedScenes[0];
-        await api.resolveActivate({
+        await api.resolveActivate(payload.projectId, {
           action: 'replace',
           activeScenes: first ? [first.id] : [],
         });
       } else if (payload?.error === 'scene_conflict') {
-        await api.resolveActivate({
+        await api.resolveActivate(payload.projectId, {
           sceneId: payload.incoming.id,
           action: action === 'keep-new' ? 'keep-new' : 'keep-old',
         });
@@ -70,7 +70,7 @@ export default function ConflictModal({
     >
       {payload?.error === 'scene_conflict' && (
         <Typography.Paragraph>
-          激活「{payload.incoming.name}」会与已激活 Scene 在下列接口上重合。
+          项目「{payload.projectId}」中，激活「{payload.incoming.name}」会与已激活 Scene 在下列接口上重合。
           冲突按 Scene 整组二选一，不会按接口拆开叠加。
         </Typography.Paragraph>
       )}

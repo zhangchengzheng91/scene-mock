@@ -30,7 +30,7 @@ export default function Banners({ status }: { status: Status | null }) {
         type="warning"
         showIcon
         message="mocks 尚未就绪"
-        description="apis.json / config.json 未成功加载。可在配置页初始化骨架，或检查 JSON 是否合法。"
+        description="config.json / projects/ 未成功加载。可在配置页初始化骨架，或检查 JSON 是否合法。"
         action={(
           <Link to="/config">
             <Button size="small" type="primary">去配置</Button>
@@ -66,8 +66,8 @@ export default function Banners({ status }: { status: Status | null }) {
         showIcon
         message="存在潜在路径歧义（按静态段更多 / 接口池注册顺序取值，不是 Scene 冲突）"
         description={status.ambiguousRoutes.map((r) => (
-          <div key={`${r.method}${r.pattern}`}>
-            {r.method} {r.pattern} → {r.apiIds.join(', ')}
+          <div key={`${r.projectId}${r.method}${r.pattern}`}>
+            [{r.projectId}] {r.method} {r.pattern} → {r.apiIds.join(', ')}
           </div>
         ))}
       />,

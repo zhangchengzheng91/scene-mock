@@ -11,6 +11,7 @@ import {
 import { DataIndex } from './conflict';
 
 export interface CompileInput {
+  projectId: string;
   apis: ApiDef[];
   scenes: Map<string, SceneDef>;
   activeScenes: string[];
@@ -54,6 +55,7 @@ export class RouteTable {
         }
         const compiled = compilePattern(api.url);
         routes.push({
+          projectId: input.projectId,
           apiId,
           sceneId,
           variant: entry.data,

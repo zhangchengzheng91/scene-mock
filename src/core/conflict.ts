@@ -74,6 +74,7 @@ function makeItem(
 }
 
 export function detectActivateConflict(
+  projectId: string,
   incoming: SceneDef,
   activeScenes: string[],
   scenes: Map<string, SceneDef>,
@@ -109,6 +110,7 @@ export function detectActivateConflict(
   }
   return {
     error: 'scene_conflict',
+    projectId,
     incoming: { id: incoming.id, name: incoming.name },
     conflicts,
     closeScenesIfKeepNew: [...close],
@@ -116,6 +118,7 @@ export function detectActivateConflict(
 }
 
 export function detectActiveSetConflicts(
+  projectId: string,
   activeScenes: string[],
   scenes: Map<string, SceneDef>,
   apis: Map<string, ApiDef>,
@@ -154,6 +157,7 @@ export function detectActiveSetConflicts(
   }
   return {
     error: 'active_set_conflict',
+    projectId,
     involvedScenes: [...involved.entries()].map(([id, name]) => ({
       id,
       name,

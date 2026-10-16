@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Card,
@@ -12,14 +12,17 @@ import {
   Typography,
   message,
 } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { useParams } from 'react-router-dom';
 import { api } from '../api';
 import MethodTag from '../components/MethodTag';
-import { ApiItem, Status, isApiError } from '../types';
+import AllApisPage from './ApiPool';
+import { ApiItem, ProjectDetail, Status, isApiError } from '../types';
 
 const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'];
 
 export default function ApisPage({ status }: { status: Status | null }) {
+  const { pid = '' } = useParams();
+  const [project, setProject] = useState<ProjectDetail | null>(null);
   const [list, setList] = useState<ApiItem[]>([]);
   const [q, setQ] = useState('');
   const [open, setOpen] = useState(false);
@@ -28,18 +31,22 @@ export default function ApisPage({ status }: { status: Status | null }) {
   const [renameOpen, setRenameOpen] = useState<ApiItem | null>(null);
   const [newId, setNewId] = useState('');
 
-  const load = () => {
-    api.apis().then(setList).catch((err) => {
-      if (!isApiError(err) || err.status !== 412) {
+  const load = useCallback(() => {
+    if (!pid) {
+      return;
+    }
+    api.project(pid).then(setProject).catch(() => setProject(null));
+    api.apis(pid).then(setList).catch((err) => {
+      if (!isApiError(err) || (err.status !== 412 && err.status !== 404)) {
         message.error(isApiError(err) ? err.message : String(err));
       }
       setList([]);
     });
-  };
+  }, [pid]);
 
   useEffect(() => {
     load();
-  }, [status?.ready, status?.apiCount]);
+  }, [load, status?.ready]);
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -54,15 +61,13 @@ export default function ApisPage({ status }: { status: Status | null }) {
   }, [list, q]);
 
   const submit = async () => {
+    if (!editing) {
+      return;
+    }
     const values = await form.validateFields();
     try {
-      if (editing) {
-        await api.updateApi(editing.id, values);
-        message.success('已更新');
-      } else {
-        await api.createApi(values);
-        message.success('已注册');
-      }
+      await api.updateApi(pid, editing.id, values);
+      message.success('已更新');
       setOpen(false);
       setEditing(null);
       load();
@@ -73,7 +78,7 @@ export default function ApisPage({ status }: { status: Status | null }) {
 
   const remove = async (item: ApiItem, force: boolean) => {
     try {
-      await api.deleteApi(item.id, force);
+      await api.deleteApi(pid, item.id, force);
       message.success('已删除');
       load();
     } catch (err) {
@@ -92,24 +97,42 @@ export default function ApisPage({ status }: { status: Status | null }) {
     }
   };
 
+  if (!pid) {
+    return <AllApisPage status={status} />;
+  }
+
   return (
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
-      <Card style={{ width: '100%', justifyContent: 'space-between' }}>
+      <Card size="small">
+        <Space size="large" wrap>
+          <span>
+            <Typography.Text type="secondary">项目名称：</Typography.Text>
+            <Typography.Text strong>{project?.name || pid}</Typography.Text>
+          </span>
+          {(project?.proxies?.length
+            ? project.proxies
+            : [{ host: project?.host || '', target: project?.target || '' }]
+          ).map((item) => (
+            <span key={item.host || 'empty'}>
+              <Typography.Text code>{item.host || '-'}</Typography.Text>
+              <span style={{ margin: '0 6px' }}>→</span>
+              <Typography.Text code>{item.target || '（走未命中策略）'}</Typography.Text>
+            </span>
+          ))}
+          <Typography.Text type="secondary">
+            接口池为项目级，仅在所属项目内生效。
+          </Typography.Text>
+        </Space>
+      </Card>
+
+      <Card style={{ width: '100%' }}>
         <Input.Search
           allowClear
           placeholder="搜索 method / URL / id / 描述"
-          style={{ width: 320, marginRight: "8px" }}
+          style={{ width: 320 }}
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => {
-          setEditing(null);
-          form.resetFields();
-          form.setFieldsValue({ method: 'GET' });
-          setOpen(true);
-        }}>
-          注册接口
-        </Button>
       </Card>
 
       <Table
@@ -168,7 +191,7 @@ export default function ApisPage({ status }: { status: Status | null }) {
       />
 
       <Modal
-        title={editing ? '编辑接口' : '注册接口'}
+        title="编辑接口"
         open={open}
         onCancel={() => setOpen(false)}
         onOk={submit}
@@ -206,7 +229,7 @@ export default function ApisPage({ status }: { status: Status | null }) {
             return;
           }
           try {
-            await api.updateApi(renameOpen.id, { id: newId });
+            await api.updateApi(pid, renameOpen.id, { newId });
             message.success('已级联重命名 apis.json、Scene 引用与 data 目录');
             setRenameOpen(null);
             load();
@@ -216,7 +239,7 @@ export default function ApisPage({ status }: { status: Status | null }) {
         }}
       >
         <Typography.Paragraph>
-          将同时改动：apis.json、所有 Scene 中的引用键、data/{renameOpen?.id}/ 目录名。
+          将同时改动：apis.json、本项目所有 Scene 中的引用键、data/{renameOpen?.id}/ 目录名。
         </Typography.Paragraph>
         <Input value={newId} onChange={(e) => setNewId(e.target.value)} />
       </Modal>

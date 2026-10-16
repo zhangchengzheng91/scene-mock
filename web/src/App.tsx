@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   ApiOutlined,
   ClusterOutlined,
+  FolderOutlined,
   ReloadOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
@@ -13,6 +14,7 @@ import Banners from './components/Banners';
 import ConflictModal from './components/ConflictModal';
 import ApisPage from './pages/ApisPage';
 import ConfigPage from './pages/ConfigPage';
+import ProjectsPage from './pages/ProjectManager';
 import ScenesPage from './pages/ScenePage';
 import {
   ActiveSetConflict,
@@ -23,15 +25,17 @@ import {
 const { Header, Sider, Content } = Layout;
 
 const NAV_ITEMS = [
+  { key: 'projects', icon: <FolderOutlined />, label: '项目管理' },
   { key: 'scenes', icon: <ClusterOutlined />, label: 'Scene 管理' },
   { key: 'apis', icon: <ApiOutlined />, label: '接口池' },
   { key: 'config', icon: <SettingOutlined />, label: '配置' },
 ] as const;
 
 function pageTitle(pathname: string): string {
-  if (pathname.startsWith('/apis')) return '接口池';
   if (pathname.startsWith('/config')) return '配置';
-  return 'Scene 管理';
+  if (pathname.endsWith('/apis')) return '接口池';
+  if (pathname.endsWith('/scenes')) return 'Scene 管理';
+  return '项目管理';
 }
 
 function Shell() {
@@ -43,9 +47,6 @@ function Shell() {
   const refresh = useCallback(() => (
     api.status().then((s) => {
       setStatus(s);
-      if (s.pendingConflict) {
-        setConflict(s.pendingConflict);
-      }
       return s;
     }).catch(() => undefined)
   ), []);
@@ -79,11 +80,13 @@ function Shell() {
     };
   }, [refresh]);
 
-  const selected = loc.pathname.startsWith('/apis')
-    ? 'apis'
-    : loc.pathname.startsWith('/config')
-      ? 'config'
-      : 'scenes';
+  const selected = loc.pathname.startsWith('/config')
+    ? 'config'
+    : loc.pathname.endsWith('/apis')
+      ? 'apis'
+      : loc.pathname.endsWith('/scenes')
+        ? 'scenes'
+        : 'projects';
 
   return (
     <Layout className="app-shell">
@@ -95,6 +98,7 @@ function Shell() {
           selectedKeys={[selected]}
           items={[...NAV_ITEMS]}
           onClick={(info) => {
+            if (info.key === 'projects') nav('/projects');
             if (info.key === 'scenes') nav('/scenes');
             if (info.key === 'apis') nav('/apis');
             if (info.key === 'config') nav('/config');
@@ -116,7 +120,11 @@ function Shell() {
         <Content className="app-content">
           <Banners status={status} />
           <Routes>
-            <Route path="/" element={<Navigate to="/scenes" replace />} />
+            <Route path="/" element={<Navigate to="/projects" replace />} />
+            <Route
+              path="/projects"
+              element={<ProjectsPage status={status} refresh={refresh} />}
+            />
             <Route
               path="/scenes"
               element={(
@@ -127,12 +135,29 @@ function Shell() {
                 />
               )}
             />
-            <Route path="/scenes/:id" element={<Navigate to="/scenes" replace />} />
-            <Route path="/apis" element={<ApisPage status={status} />} />
+            <Route
+              path="/projects/:pid/scenes"
+              element={(
+                <ScenesPage
+                  status={status}
+                  refresh={refresh}
+                  onConflict={setConflict}
+                />
+              )}
+            />
+            <Route
+              path="/apis"
+              element={<ApisPage status={status} />}
+            />
+            <Route
+              path="/projects/:pid/apis"
+              element={<ApisPage status={status} />}
+            />
             <Route
               path="/config"
               element={<ConfigPage status={status} refresh={refresh} />}
             />
+            <Route path="*" element={<Navigate to="/projects" replace />} />
           </Routes>
         </Content>
       </Layout>

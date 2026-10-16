@@ -29,7 +29,11 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return data as T;
 }
 
+const enc = encodeURIComponent;
+const proj = (pid: string) => `/projects/${enc(pid)}`;
+
 export const api = {
+  // ── 工作区与全局 ──
   workspace: () => request<import('./types').Workspace>('/workspace'),
   bindWorkspace: (mocksRoot: string) =>
     request('/workspace', {
@@ -38,66 +42,101 @@ export const api = {
     }),
   initWorkspace: () => request('/workspace/init', { method: 'POST', body: '{}' }),
   status: () => request<import('./types').Status>('/status'),
-  apis: () => request<import('./types').ApiItem[]>('/apis'),
-  createApi: (body: object) =>
-    request('/apis', { method: 'POST', body: JSON.stringify(body) }),
-  updateApi: (id: string, body: object) =>
-    request(`/apis/${encodeURIComponent(id)}`, {
-      method: 'PUT',
-      body: JSON.stringify(body),
-    }),
-  deleteApi: (id: string, force = false) =>
-    request(`/apis/${encodeURIComponent(id)}${force ? '?force=1' : ''}`, {
-      method: 'DELETE',
-    }),
-  scenes: () => request<import('./types').SceneListItem[]>('/scenes'),
-  scene: (id: string) =>
-    request<import('./types').SceneDetail>(`/scenes/${encodeURIComponent(id)}`),
-  createScene: (body: object) =>
-    request('/scenes', { method: 'POST', body: JSON.stringify(body) }),
-  updateScene: (id: string, body: object) =>
-    request(`/scenes/${encodeURIComponent(id)}`, {
-      method: 'PUT',
-      body: JSON.stringify(body),
-    }),
-  deleteScene: (id: string) =>
-    request(`/scenes/${encodeURIComponent(id)}`, { method: 'DELETE' }),
-  upsertSceneApi: (sceneId: string, apiId: string, body: object) =>
-    request(
-      `/scenes/${encodeURIComponent(sceneId)}/apis/${encodeURIComponent(apiId)}`,
-      { method: 'PUT', body: JSON.stringify(body) },
-    ),
-  removeSceneApi: (sceneId: string, apiId: string) =>
-    request(
-      `/scenes/${encodeURIComponent(sceneId)}/apis/${encodeURIComponent(apiId)}`,
-      { method: 'DELETE' },
-    ),
-  duplicateSceneApi: (sceneId: string, entryId: string) =>
-    request(
-      `/scenes/${encodeURIComponent(sceneId)}/apis/${encodeURIComponent(entryId)}/duplicate`,
-      { method: 'POST', body: '{}' },
-    ),
-  shareSceneApi: (sceneId: string, apiId: string, variant: string) =>
-    request(
-      `/scenes/${encodeURIComponent(sceneId)}/apis/${encodeURIComponent(apiId)}/share`,
-      { method: 'PUT', body: JSON.stringify({ variant }) },
-    ),
-  setSceneProxies: (sceneId: string, enabled: boolean) =>
-    request(`/scenes/${encodeURIComponent(sceneId)}/proxies`, {
-      method: 'PUT',
-      body: JSON.stringify({ enabled }),
-    }),
-  variants: (apiId: string) => request(`/data/${encodeURIComponent(apiId)}`),
-  activate: (sceneId: string) =>
-    request('/activate', { method: 'POST', body: JSON.stringify({ sceneId }) }),
-  resolveActivate: (body: object) =>
-    request('/activate/resolve', { method: 'POST', body: JSON.stringify(body) }),
-  deactivate: (sceneId: string) =>
-    request('/deactivate', { method: 'POST', body: JSON.stringify({ sceneId }) }),
-  config: () => request<import('./types').AppConfig>('/config'),
+  config: () => request<import('./types').GlobalConfig>('/config'),
   saveConfig: (body: object) =>
     request('/config', { method: 'PUT', body: JSON.stringify(body) }),
   whistleRules: () => request<{ text: string }>('/whistle-rules'),
+
+  // ── 项目 ──
+  projects: () => request<import('./types').ProjectSummary[]>('/projects'),
+  project: (pid: string) =>
+    request<import('./types').ProjectDetail>(proj(pid)),
+  createProject: (body: object) =>
+    request<import('./types').ProjectDetail>('/projects', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  updateProject: (pid: string, body: object) =>
+    request<import('./types').ProjectDetail>(proj(pid), {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    }),
+  deleteProject: (pid: string, confirm = false) =>
+    request<{ ok: true; removed: { scenes: number; apis: number; variants: number } }>(
+      `${proj(pid)}${confirm ? '?confirm=1' : ''}`,
+      { method: 'DELETE' },
+    ),
+
+  // ── 接口池（项目内） ──
+  apis: (pid: string) => request<import('./types').ApiItem[]>(`${proj(pid)}/apis`),
+  createApi: (pid: string, body: object) =>
+    request(`${proj(pid)}/apis`, { method: 'POST', body: JSON.stringify(body) }),
+  updateApi: (pid: string, id: string, body: object) =>
+    request(`${proj(pid)}/apis/${enc(id)}`, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    }),
+  deleteApi: (pid: string, id: string, force = false) =>
+    request(`${proj(pid)}/apis/${enc(id)}${force ? '?force=1' : ''}`, {
+      method: 'DELETE',
+    }),
+
+  // ── Scene（项目内） ──
+  scenes: (pid: string) =>
+    request<import('./types').SceneListItem[]>(`${proj(pid)}/scenes`),
+  scene: (pid: string, id: string) =>
+    request<import('./types').SceneDetail>(`${proj(pid)}/scenes/${enc(id)}`),
+  createScene: (pid: string, body: object) =>
+    request(`${proj(pid)}/scenes`, { method: 'POST', body: JSON.stringify(body) }),
+  updateScene: (pid: string, id: string, body: object) =>
+    request(`${proj(pid)}/scenes/${enc(id)}`, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    }),
+  deleteScene: (pid: string, id: string) =>
+    request(`${proj(pid)}/scenes/${enc(id)}`, { method: 'DELETE' }),
+  upsertSceneApi: (pid: string, sceneId: string, apiId: string, body: object) =>
+    request(
+      `${proj(pid)}/scenes/${enc(sceneId)}/apis/${enc(apiId)}`,
+      { method: 'PUT', body: JSON.stringify(body) },
+    ),
+  removeSceneApi: (pid: string, sceneId: string, apiId: string) =>
+    request(
+      `${proj(pid)}/scenes/${enc(sceneId)}/apis/${enc(apiId)}`,
+      { method: 'DELETE' },
+    ),
+  duplicateSceneApi: (pid: string, sceneId: string, entryId: string) =>
+    request(
+      `${proj(pid)}/scenes/${enc(sceneId)}/apis/${enc(entryId)}/duplicate`,
+      { method: 'POST', body: '{}' },
+    ),
+  shareSceneApi: (pid: string, sceneId: string, apiId: string, variant: string) =>
+    request(
+      `${proj(pid)}/scenes/${enc(sceneId)}/apis/${enc(apiId)}/share`,
+      { method: 'PUT', body: JSON.stringify({ variant }) },
+    ),
+  setSceneProxies: (pid: string, sceneId: string, enabled: boolean) =>
+    request(`${proj(pid)}/scenes/${enc(sceneId)}/proxies`, {
+      method: 'PUT',
+      body: JSON.stringify({ enabled }),
+    }),
+  variants: (pid: string, apiId: string) =>
+    request<any[]>(`${proj(pid)}/data/${enc(apiId)}`),
+  activate: (pid: string, sceneId: string) =>
+    request(`${proj(pid)}/activate`, {
+      method: 'POST',
+      body: JSON.stringify({ sceneId }),
+    }),
+  resolveActivate: (pid: string, body: object) =>
+    request(`${proj(pid)}/activate/resolve`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  deactivate: (pid: string, sceneId: string) =>
+    request(`${proj(pid)}/deactivate`, {
+      method: 'POST',
+      body: JSON.stringify({ sceneId }),
+    }),
 };
 
 export function eventsUrl() {

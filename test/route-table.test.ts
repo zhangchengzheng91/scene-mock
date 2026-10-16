@@ -27,6 +27,7 @@ describe('route-table', () => {
     ]);
     const table = new RouteTable();
     table.compile({
+      projectId: 'p1',
       apis,
       scenes,
       activeScenes: ['a'],
@@ -49,7 +50,7 @@ describe('route-table', () => {
       ['get-orders', new Map<string, unknown>([['nil', null]])],
     ]);
     const table = new RouteTable();
-    table.compile({ apis, scenes, activeScenes: ['a'], dataIndex });
+    table.compile({ projectId: 'p1', apis, scenes, activeScenes: ['a'], dataIndex });
     const hit = table.match('GET', '/api/orders');
     assert.ok(hit);
     assert.equal(hit!.response.body, null);
@@ -67,7 +68,7 @@ describe('route-table', () => {
       ['get-orders', new Map<string, unknown>([['list', {}]])],
     ]);
     const table = new RouteTable();
-    table.compile({ apis, scenes, activeScenes: ['a'], dataIndex });
+    table.compile({ projectId: 'p1', apis, scenes, activeScenes: ['a'], dataIndex });
     assert.ok(table.match('GET', '/api/orders'));
     assert.equal(table.match('POST', '/api/orders'), null);
   });
@@ -88,7 +89,7 @@ describe('route-table', () => {
       ['get-user-alias', new Map<string, unknown>([['v2', { a: 2 }]])],
     ]);
     const table = new RouteTable();
-    table.compile({ apis, scenes, activeScenes: ['a'], dataIndex });
+    table.compile({ projectId: 'p1', apis, scenes, activeScenes: ['a'], dataIndex });
     const hit = table.match('GET', '/api/users/1');
     assert.equal(hit?.apiId, 'get-user');
     assert.equal(table.ambiguous.length, 1);
@@ -111,7 +112,7 @@ describe('route-table', () => {
       ['create-order', new Map<string, unknown>([['ok', {}]])],
     ]);
     const table = new RouteTable();
-    table.compile({ apis, scenes, activeScenes: ['a'], dataIndex });
+    table.compile({ projectId: 'p1', apis, scenes, activeScenes: ['a'], dataIndex });
     assert.equal(table.match('GET', '/api/orders'), null);
     assert.ok(table.match('POST', '/api/orders'));
   });

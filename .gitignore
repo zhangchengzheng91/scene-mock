@@ -29,7 +29,11 @@ Thumbs.db
 # IDE / editor
 .idea/
 .vscode/
+.cursor/
 .history/
+
+# Local assistant memory
+.workbuddy/
 *.swp
 *.swo
 *~

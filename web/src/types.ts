@@ -13,19 +13,42 @@ export interface Workspace {
   recent: string[];
 }
 
+export interface GlobalConfig {
+  matchPatterns: string[];
+  unmatched: Unmatched;
+}
+
+export interface ProjectProxy {
+  host: string;
+  target: string;
+}
+
+export interface ProjectSummary {
+  id: string;
+  name: string;
+  host: string;
+  target: string;
+  proxies?: ProjectProxy[];
+  sceneCount: number;
+  activeSceneCount: number;
+  routeCount: number;
+  hasError: boolean;
+}
+
+export interface ProjectDetail extends ProjectSummary {
+  activeScenes: string[];
+  errors: FileError[];
+}
+
 export interface Status {
   bound: boolean;
   ready: boolean;
   mocksRoot: string;
-  activeScenes: string[];
-  routeCount: number;
-  sceneCount: number;
-  apiCount: number;
-  activeCount: number;
+  projects: Record<string, { activeScenes: string[]; routeCount: number }>;
   errors: FileError[];
-  ambiguousRoutes: { method: string; pattern: string; apiIds: string[] }[];
-  pendingConflict: ConflictPayload | ActiveSetConflict | null;
-  orphans: { apiId: string; variant: string; dataPath: string }[];
+  ambiguousRoutes: { projectId: string; method: string; pattern: string; apiIds: string[] }[];
+  unresolvedHosts: string[];
+  orphans: { projectId: string; apiId: string; variant: string; dataPath: string }[];
   httpsCapture: unknown;
 }
 
@@ -78,13 +101,6 @@ export interface SceneDetail {
   entries: SceneEntryView[];
 }
 
-export interface AppConfig {
-  proxyTarget: string;
-  activeScenes: string[];
-  matchPatterns: string[];
-  unmatched: Unmatched;
-}
-
 export interface ConflictSide {
   id?: string;
   name?: string;
@@ -102,6 +118,7 @@ export interface ConflictItem {
 
 export interface ConflictPayload {
   error: 'scene_conflict';
+  projectId: string;
   incoming: { id: string; name: string };
   conflicts: ConflictItem[];
   closeScenesIfKeepNew: string[];
@@ -109,6 +126,7 @@ export interface ConflictPayload {
 
 export interface ActiveSetConflict {
   error: 'active_set_conflict';
+  projectId: string;
   involvedScenes: { id: string; name: string }[];
   conflicts: ConflictItem[];
 }

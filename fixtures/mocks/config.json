@@ -1,6 +1,4 @@
 {
-  "proxyTarget": "",
-  "activeScenes": ["normal-order"],
   "matchPatterns": ["/api/"],
   "unmatched": "passthrough"
 }

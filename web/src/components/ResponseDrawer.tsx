@@ -15,12 +15,14 @@ import { api } from '../api';
 import { SceneEntryView, isApiError } from '../types';
 
 export default function ResponseDrawer({
+  pid,
   sceneId,
   entry,
   open,
   onClose,
   onSaved,
 }: {
+  pid: string;
   sceneId: string;
   entry: SceneEntryView | null;
   open: boolean;
@@ -46,14 +48,14 @@ export default function ResponseDrawer({
         || 'application/json',
     });
     setBodyText('{}');
-    api.variants(entry.apiId).then((list: any[]) => {
+    api.variants(pid, entry.apiId).then((list: any[]) => {
       setVariants(list || []);
       const current = (list || []).find((v) => v.variant === entry.variant);
       if (current && current.body !== undefined) {
         setBodyText(JSON.stringify(current.body, null, 2));
       }
     }).catch(() => undefined);
-  }, [open, entry, form]);
+  }, [open, entry, form, pid]);
 
   const save = async () => {
     if (!entry) {
@@ -69,7 +71,7 @@ export default function ResponseDrawer({
     const values = await form.validateFields();
     setSaving(true);
     try {
-      const result: any = await api.upsertSceneApi(sceneId, entry.entryId, {
+      const result: any = await api.upsertSceneApi(pid, sceneId, entry.entryId, {
         status: values.status,
         delay: values.delay,
         keyword: values.keyword || '',
@@ -104,7 +106,7 @@ export default function ResponseDrawer({
       return;
     }
     try {
-      await api.shareSceneApi(sceneId, entry.entryId, variant);
+      await api.shareSceneApi(pid, sceneId, entry.entryId, variant);
       message.success(`已显式共享 ${variant}`);
       onSaved();
     } catch (err) {

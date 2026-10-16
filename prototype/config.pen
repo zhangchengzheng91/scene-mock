@@ -1,5 +1,5 @@
 {
-  "version": "2.17",
+  "version": "2.21",
   "children": [
     {
       "type": "frame",
@@ -192,7 +192,7 @@
       "name": "Screen/全局配置",
       "clip": true,
       "width": 1440,
-      "height": 1180,
+      "height": 1416,
       "fill": "$layout",
       "children": [
         {
@@ -258,6 +258,21 @@
                   "layout": "vertical",
                   "gap": 4,
                   "children": [
+                    {
+                      "id": "fFAd71",
+                      "type": "ref",
+                      "ref": "Z82pr",
+                      "name": "Nav 项目管理",
+                      "width": "fill_container",
+                      "descendants": {
+                        "JHxqH": {
+                          "icon": "folder-kanban"
+                        },
+                        "vbpif": {
+                          "content": "项目管理"
+                        }
+                      }
+                    },
                     {
                       "id": "n1XwW",
                       "type": "ref",
@@ -573,7 +588,7 @@
                           "id": "G6sSck",
                           "name": "CardTitle",
                           "fill": "$fg",
-                          "content": "透传",
+                          "content": "未命中策略",
                           "fontFamily": "$fontB",
                           "fontSize": 14,
                           "fontWeight": "600"
@@ -589,53 +604,6 @@
                       "gap": 16,
                       "padding": 20,
                       "children": [
-                        {
-                          "type": "frame",
-                          "id": "AsdTG",
-                          "name": "proxyTarget",
-                          "width": "fill_container",
-                          "layout": "vertical",
-                          "gap": 6,
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "n3iGt",
-                              "name": "FL",
-                              "fill": "$fg",
-                              "content": "proxyTarget",
-                              "fontFamily": "$fontB",
-                              "fontSize": 14,
-                              "fontWeight": "normal"
-                            },
-                            {
-                              "type": "frame",
-                              "id": "Kg2I3",
-                              "name": "PTInput",
-                              "width": "fill_container",
-                              "height": 32,
-                              "cornerRadius": "$radius",
-                              "stroke": "$border",
-                              "strokeWidth": 1,
-                              "padding": [
-                                0,
-                                11
-                              ],
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "WpakX",
-                                  "name": "PTVal",
-                                  "fill": "$fg2",
-                                  "content": "（空 = 未命中 req.passThrough 回源）",
-                                  "fontFamily": "$fontB",
-                                  "fontSize": 13,
-                                  "fontWeight": "normal"
-                                }
-                              ]
-                            }
-                          ]
-                        },
                         {
                           "type": "frame",
                           "id": "S8A2bi",
@@ -1101,7 +1069,45 @@
                               "fill": "$fg",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "热加载：scenes/order-error/responses/create-order.json  JSON 语法错误，已保留上一份合法内容。",
+                              "content": "热加载：projects/microcredit/data/create-order/validation-error.json  JSON 语法错误，已保留上一份合法内容。",
+                              "fontFamily": "$fontB",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "gIwZnu",
+                          "name": "UnknownHostAlert",
+                          "width": "fill_container",
+                          "fill": "$warnSoft",
+                          "cornerRadius": "$radius",
+                          "gap": 8,
+                          "padding": [
+                            8,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "MdbbWi",
+                              "name": "HI",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "globe",
+                              "library": "lucide",
+                              "fill": "$warn"
+                            },
+                            {
+                              "type": "text",
+                              "id": "6zvW3j",
+                              "name": "HT",
+                              "fill": "$fg",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "存在未识别 host（如 localhost:8889）的请求经 matchPatterns 进入插件，已归入当前项目 microcredit；建议为其新建项目。",
                               "fontFamily": "$fontB",
                               "fontSize": 13,
                               "fontWeight": "normal"
@@ -1192,6 +1198,21 @@
                   "layout": "vertical",
                   "gap": 4,
                   "children": [
+                    {
+                      "id": "GRXaSV",
+                      "type": "ref",
+                      "ref": "Z82pr",
+                      "name": "Nav 项目管理",
+                      "width": "fill_container",
+                      "descendants": {
+                        "JHxqH": {
+                          "icon": "folder-kanban"
+                        },
+                        "vbpif": {
+                          "content": "项目管理"
+                        }
+                      }
+                    },
                     {
                       "id": "jcU7A",
                       "type": "ref",

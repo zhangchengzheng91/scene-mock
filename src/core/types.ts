@@ -56,9 +56,28 @@ export interface SceneDef {
   mtimeMs?: number;
 }
 
-export interface AppConfig {
-  proxyTarget: string;
+/** 一组「被代理的域名 → 代理到的域名」。同一项目可有多组。 */
+export interface ProjectProxy {
+  /** 规范化后的被代理域名（小写、无协议、无端口；可带路径前缀） */
+  host: string;
+  /** 代理到的 origin，可为空（空走全局 unmatched 逻辑） */
+  target: string;
+}
+
+export interface ProjectDef {
+  /** 目录名 projects/<id>/ */
+  id: string;
+  name: string;
+  /** 第一组域名，与 proxies[0] 保持一致，兼容只读 host/target 的调用方 */
+  host: string;
+  /** 第一组的代理目标 */
+  target: string;
+  proxies: ProjectProxy[];
   activeScenes: string[];
+}
+
+/** 全局 mocks/config.json */
+export interface GlobalConfig {
   matchPatterns: string[];
   unmatched: 'passthrough' | '404';
 }
@@ -72,6 +91,7 @@ export interface ResponseDoc {
 }
 
 export interface CompiledRoute {
+  projectId: string;
   apiId: string;
   sceneId: string;
   variant: string;
@@ -111,6 +131,7 @@ export interface ConflictItem {
 
 export interface SceneConflictPayload {
   error: 'scene_conflict';
+  projectId: string;
   incoming: { id: string; name: string };
   conflicts: ConflictItem[];
   closeScenesIfKeepNew: string[];
@@ -118,15 +139,21 @@ export interface SceneConflictPayload {
 
 export interface ActiveSetConflictPayload {
   error: 'active_set_conflict';
+  projectId: string;
   involvedScenes: { id: string; name: string }[];
   conflicts: ConflictItem[];
 }
 
-export const DEFAULT_CONFIG: AppConfig = {
-  proxyTarget: '',
-  activeScenes: [],
+export const DEFAULT_CONFIG: GlobalConfig = {
   matchPatterns: ['/api/'],
   unmatched: 'passthrough',
 };
+
+export function freshConfig(): GlobalConfig {
+  return {
+    matchPatterns: DEFAULT_CONFIG.matchPatterns.slice(),
+    unmatched: DEFAULT_CONFIG.unmatched,
+  };
+}
 
 export const ID_PATTERN = /^[a-zA-Z][a-zA-Z0-9_-]*$/;

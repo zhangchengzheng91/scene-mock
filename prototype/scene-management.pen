@@ -1,5 +1,5 @@
 {
-  "version": "2.17",
+  "version": "2.21",
   "children": [
     {
       "type": "frame",
@@ -599,6 +599,21 @@
                   "gap": 4,
                   "children": [
                     {
+                      "id": "H2YnFp",
+                      "type": "ref",
+                      "ref": "HVCzC",
+                      "name": "Nav 项目管理",
+                      "width": "fill_container",
+                      "descendants": {
+                        "LS26F": {
+                          "icon": "folder-kanban"
+                        },
+                        "lT0od": {
+                          "content": "项目管理"
+                        }
+                      }
+                    },
+                    {
                       "id": "FsUHb",
                       "type": "ref",
                       "ref": "hfOzi",
@@ -720,7 +735,7 @@
                       "id": "B0GVrI",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/scenes",
+                      "content": "#/projects/microcredit/scenes",
                       "fontFamily": "$fontM",
                       "fontSize": 11,
                       "fontWeight": "normal"
@@ -743,6 +758,16 @@
                       "content": "启动 Scene 即批量激活接口代理；切换不丢返回值文件",
                       "fontFamily": "$fontB",
                       "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "go6t0I",
+                      "name": "ProjHint",
+                      "fill": "$fg2",
+                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "fontFamily": "$fontB",
+                      "fontSize": 12,
                       "fontWeight": "normal"
                     }
                   ]
@@ -869,6 +894,36 @@
                       "gap": 16,
                       "alignItems": "center",
                       "children": [
+                        {
+                          "type": "frame",
+                          "id": "Xa3lA",
+                          "name": "FormItem",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "P2RYjk",
+                              "name": "Label",
+                              "fill": "$fg",
+                              "content": "项目名称：",
+                              "fontFamily": "$fontB",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "id": "dHay1",
+                              "type": "ref",
+                              "ref": "aYnLb",
+                              "name": "Search",
+                              "descendants": {
+                                "M9RPBJ": {
+                                  "content": "搜索项目名称"
+                                }
+                              }
+                            }
+                          ]
+                        },
                         {
                           "type": "frame",
                           "id": "c0HFH",
@@ -3231,6 +3286,21 @@
                   "gap": 4,
                   "children": [
                     {
+                      "id": "cGlcL",
+                      "type": "ref",
+                      "ref": "HVCzC",
+                      "name": "Nav 项目管理",
+                      "width": "fill_container",
+                      "descendants": {
+                        "LS26F": {
+                          "icon": "folder-kanban"
+                        },
+                        "lT0od": {
+                          "content": "项目管理"
+                        }
+                      }
+                    },
+                    {
                       "id": "g8SDz",
                       "type": "ref",
                       "ref": "hfOzi",
@@ -3352,7 +3422,7 @@
                       "id": "j2CtW",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/scenes",
+                      "content": "#/projects/microcredit/scenes",
                       "fontFamily": "$fontM",
                       "fontSize": 11,
                       "fontWeight": "normal"
@@ -3375,6 +3445,16 @@
                       "content": "启动 Scene 即批量激活接口代理；切换不丢返回值文件",
                       "fontFamily": "$fontB",
                       "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "t7Am1m",
+                      "name": "ProjHint",
+                      "fill": "$fg2",
+                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "fontFamily": "$fontB",
+                      "fontSize": 12,
                       "fontWeight": "normal"
                     }
                   ]
@@ -3501,6 +3581,36 @@
                       "gap": 16,
                       "alignItems": "center",
                       "children": [
+                        {
+                          "type": "frame",
+                          "id": "B6cN6G",
+                          "name": "FormItem",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "QRVG6",
+                              "name": "Label",
+                              "fill": "$fg",
+                              "content": "项目名称：",
+                              "fontFamily": "$fontB",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "id": "CcCOG",
+                              "type": "ref",
+                              "ref": "aYnLb",
+                              "name": "Search",
+                              "descendants": {
+                                "M9RPBJ": {
+                                  "content": "搜索项目名称"
+                                }
+                              }
+                            }
+                          ]
+                        },
                         {
                           "type": "frame",
                           "id": "jsTaW",
@@ -4970,7 +5080,7 @@
                           "fill": "$fg2",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "「下单异常流」与已激活的「正常下单」共用同一 api-id。冲突按 Scene 整组切换，不按接口拆开。",
+                          "content": "项目「微贷后端」内，「下单异常流」与已激活的「正常下单」共用同一 api-id。冲突按 Scene 整组切换，不按接口拆开，不影响其它项目。",
                           "fontFamily": "$fontB",
                           "fontSize": 12,
                           "fontWeight": "normal"
@@ -5310,6 +5420,21 @@
                   "gap": 4,
                   "children": [
                     {
+                      "id": "tN3LH",
+                      "type": "ref",
+                      "ref": "HVCzC",
+                      "name": "Nav 项目管理",
+                      "width": "fill_container",
+                      "descendants": {
+                        "LS26F": {
+                          "icon": "folder-kanban"
+                        },
+                        "lT0od": {
+                          "content": "项目管理"
+                        }
+                      }
+                    },
+                    {
                       "id": "ce1cO",
                       "type": "ref",
                       "ref": "hfOzi",
@@ -5431,7 +5556,7 @@
                       "id": "Ig57q",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/scenes",
+                      "content": "#/projects/microcredit/scenes",
                       "fontFamily": "$fontM",
                       "fontSize": 11,
                       "fontWeight": "normal"
@@ -5454,6 +5579,16 @@
                       "content": "启动 Scene 即批量激活接口代理；切换不丢返回值文件",
                       "fontFamily": "$fontB",
                       "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "u5ec3G",
+                      "name": "ProjHint",
+                      "fill": "$fg2",
+                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "fontFamily": "$fontB",
+                      "fontSize": 12,
                       "fontWeight": "normal"
                     }
                   ]
@@ -5580,6 +5715,36 @@
                       "gap": 16,
                       "alignItems": "center",
                       "children": [
+                        {
+                          "type": "frame",
+                          "id": "b7tO9w",
+                          "name": "FormItem",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L3N1XP",
+                              "name": "Label",
+                              "fill": "$fg",
+                              "content": "项目名称：",
+                              "fontFamily": "$fontB",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "id": "Gm72t",
+                              "type": "ref",
+                              "ref": "aYnLb",
+                              "name": "Search",
+                              "descendants": {
+                                "M9RPBJ": {
+                                  "content": "搜索项目名称"
+                                }
+                              }
+                            }
+                          ]
+                        },
                         {
                           "type": "frame",
                           "id": "kFna6",
@@ -8009,7 +8174,7 @@
                   "fill": "$fg",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "mocks/scenes/normal-order/responses/get-orders.json",
+                  "content": "data：projects/microcredit/data/get-orders/list.json ｜ Scene：projects/microcredit/scenes/normal-order.json ｜ 被 2 个 Scene 引用，保存将 fork",
                   "fontFamily": "$fontM",
                   "fontSize": 11,
                   "fontWeight": "normal"
@@ -8516,6 +8681,21 @@
                   "gap": 4,
                   "children": [
                     {
+                      "id": "P3yRTa",
+                      "type": "ref",
+                      "ref": "HVCzC",
+                      "name": "Nav 项目管理",
+                      "width": "fill_container",
+                      "descendants": {
+                        "LS26F": {
+                          "icon": "folder-kanban"
+                        },
+                        "lT0od": {
+                          "content": "项目管理"
+                        }
+                      }
+                    },
+                    {
                       "id": "Q4D60v",
                       "type": "ref",
                       "ref": "hfOzi",
@@ -8637,7 +8817,7 @@
                       "id": "sieFT",
                       "name": "Hash",
                       "fill": "$fg2",
-                      "content": "#/scenes",
+                      "content": "#/projects/microcredit/scenes",
                       "fontFamily": "$fontM",
                       "fontSize": 11,
                       "fontWeight": "normal"
@@ -8660,6 +8840,16 @@
                       "content": "启动 Scene 即批量激活接口代理；切换不丢返回值文件",
                       "fontFamily": "$fontB",
                       "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "HPkuyY",
+                      "name": "ProjHint",
+                      "fill": "$fg2",
+                      "content": "当前项目：微贷后端（microcredit-ms-test-c.jhjj.paas.test）",
+                      "fontFamily": "$fontB",
+                      "fontSize": 12,
                       "fontWeight": "normal"
                     }
                   ]
@@ -8786,6 +8976,36 @@
                       "gap": 16,
                       "alignItems": "center",
                       "children": [
+                        {
+                          "type": "frame",
+                          "id": "bEG37",
+                          "name": "FormItem",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "L11Iu",
+                              "name": "Label",
+                              "fill": "$fg",
+                              "content": "项目名称：",
+                              "fontFamily": "$fontB",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "id": "C9UvTx",
+                              "type": "ref",
+                              "ref": "aYnLb",
+                              "name": "Search",
+                              "descendants": {
+                                "M9RPBJ": {
+                                  "content": "搜索项目名称"
+                                }
+                              }
+                            }
+                          ]
+                        },
                         {
                           "type": "frame",
                           "id": "G7zKi",
