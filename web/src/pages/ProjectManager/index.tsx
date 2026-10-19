@@ -11,8 +11,18 @@ import {
 } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../api';
+import { copyText } from '../../copyText';
 import { ProjectSummary, Status, isApiError } from '../../types';
 import CreateProject from './CreateProject';
+
+function ruleLine(item: { host: string; target: string }): string {
+  const host = item.host.trim();
+  const target = item.target.trim();
+  if (!host) {
+    return '';
+  }
+  return target ? `${host} ${target}` : host;
+}
 
 export default function ProjectsPage({
   status,
@@ -37,6 +47,23 @@ export default function ProjectsPage({
   useEffect(() => {
     load();
   }, [load, status?.ready]);
+
+  const copyRules = async (row: ProjectSummary) => {
+    const pairs = row.proxies?.length
+      ? row.proxies
+      : [{ host: row.host, target: row.target }];
+    const lines = pairs.map(ruleLine).filter(Boolean);
+    if (!lines.length) {
+      message.warning('该项目没有可复制的规则');
+      return;
+    }
+    try {
+      await copyText(`${lines.join('\n')}\n`);
+      message.success('已复制规则');
+    } catch (err) {
+      message.error(isApiError(err) ? err.message : String(err));
+    }
+  };
 
   const remove = async (row: ProjectSummary) => {
     try {
@@ -84,8 +111,8 @@ export default function ProjectsPage({
       <Card style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Typography.Text type="secondary">
-            一个项目 = 一对域名（被代理的域名 → 代理到的域名）+ 一条 whistle 规则。
-            切 Scene 不会改规则。各项目的 Scene 与接口池从对应行进入管理。
+            一个项目维护一组规则，例如 example.com/shop/api scene-mock://。
+            编辑项目只改规则。切 Scene 不会改规则。各项目的 Scene 与接口池从对应行进入管理。
           </Typography.Text>
           <CreateProject
             list={list}
@@ -118,7 +145,7 @@ export default function ProjectsPage({
             ),
           },
           {
-            title: '域名对（被代理 → 代理到）',
+            title: '规则',
             render: (_, row) => {
               const pairs = row.proxies?.length
                 ? row.proxies
@@ -126,16 +153,9 @@ export default function ProjectsPage({
               return (
                 <Space direction="vertical" size={4}>
                   {pairs.map((item) => (
-                    <span key={item.host || 'empty'}>
-                      <Typography.Text code>{item.host || '-'}</Typography.Text>
-                      <span style={{ margin: '0 8px' }}>→</span>
-                      <Typography.Text code>{item.target || '（走未命中策略）'}</Typography.Text>
-                      <div>
-                        <Typography.Text type="secondary">
-                          规则：{item.host ? `${item.host} scene-mock://` : '无'}
-                        </Typography.Text>
-                      </div>
-                    </span>
+                    <Typography.Text key={item.host || 'empty'} code>
+                      {ruleLine(item) || '无'}
+                    </Typography.Text>
                   ))}
                 </Space>
               );
@@ -162,9 +182,12 @@ export default function ProjectsPage({
           },
           {
             title: '操作',
-            width: 280,
+            width: 360,
             render: (_, row) => (
               <Space wrap>
+                <Button size="small" onClick={() => copyRules(row)}>
+                  复制规则
+                </Button>
                 <Button
                   size="small"
                   onClick={() => nav(`/scenes?project=${encodeURIComponent(row.id)}`)}

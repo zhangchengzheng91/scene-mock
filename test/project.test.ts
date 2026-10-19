@@ -46,6 +46,8 @@ describe('project', () => {
     assert.equal(normalizeTarget('localhost:8889'), 'http://localhost:8889');
     assert.equal(normalizeTarget('https://example.com/'), 'https://example.com');
     assert.equal(normalizeTarget(''), '');
+    assert.equal(normalizeTarget('scene-mock://'), 'scene-mock://');
+    assert.equal(normalizeTarget('scene-mock:///'), 'scene-mock://');
   });
 
   it('throws on invalid target', () => {

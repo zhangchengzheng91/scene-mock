@@ -33,7 +33,6 @@ export default function setupRouter(router: Router) {
       throw new HttpError(412, 'unbound', '尚未绑定工作区');
     }
     await app.store.initSkeleton();
-    app.syncRules();
     ctx.body = app.workspaceView();
   });
 
@@ -78,7 +77,6 @@ export default function setupRouter(router: Router) {
   wrap(router, 'put', '/cgi-bin/config', async (ctx) => {
     const app = getContext();
     ctx.body = await app.store.updateConfig(bodyOf(ctx));
-    app.syncRules();
   });
 
   wrap(router, 'get', '/cgi-bin/whistle-rules', async (ctx) => {
@@ -94,7 +92,6 @@ export default function setupRouter(router: Router) {
   wrap(router, 'post', '/cgi-bin/projects', async (ctx) => {
     const app = getContext();
     ctx.body = await app.store.createProject(bodyOf(ctx));
-    app.syncRules();
   });
 
   wrap(router, 'get', '/cgi-bin/projects/:pid', async (ctx) => {
@@ -104,14 +101,12 @@ export default function setupRouter(router: Router) {
   wrap(router, 'put', '/cgi-bin/projects/:pid', async (ctx) => {
     const app = getContext();
     ctx.body = await app.store.updateProject(ctx.params.pid, bodyOf(ctx));
-    app.syncRules();
   });
 
   wrap(router, 'delete', '/cgi-bin/projects/:pid', async (ctx) => {
     const app = getContext();
     const confirm = String(ctx.query.confirm || '') === '1';
     ctx.body = await app.store.deleteProject(ctx.params.pid, confirm);
-    app.syncRules();
   });
 
   // ── 接口池（项目内） ───────────────────────────────────

@@ -13,6 +13,7 @@ import {
 } from "antd";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { api } from "../../api";
+import { copyText } from "../../copyText";
 import CreateScene from "./CreateScene";
 import SceneDetailPage from "./SceneDetailPage";
 import {
@@ -310,7 +311,7 @@ export default function ScenesPage({
                   onClick={async () => {
                     try {
                       const r = await api.whistleRules();
-                      await navigator.clipboard.writeText(r.text);
+                      await copyText(r.text);
                       message.success("已复制 whistle 规则");
                     } catch (err) {
                       message.error(isApiError(err) ? err.message : String(err));
@@ -326,7 +327,7 @@ export default function ScenesPage({
                       const res: any = await api.deleteScene(row.pid, row.id);
                       if (res?.orphans?.length) {
                         message.info(
-                          `已删除。残留孤立 variant ${res.orphans.length} 个，可在配置页清理。`,
+                          `已删除。残留孤立 variant ${res.orphans.length} 个，data 文件仍保留。`,
                         );
                       } else {
                         message.success("已删除");

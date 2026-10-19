@@ -10,8 +10,6 @@ import bodyParser from 'koa-bodyparser';
 import setupRouter from '../src/uiServer/router';
 import { initContext } from '../src/context';
 
-process.env.SCENE_MOCK_RULES_FILE = path.join(os.tmpdir(), `scene-mock-rules-${process.pid}.txt`);
-
 function mockOptions(): Whistle.PluginOptions {
   const kv = new Map<string, string>();
   return {

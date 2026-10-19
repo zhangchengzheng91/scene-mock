@@ -67,14 +67,24 @@ export function hostPathPrefix(projectHost: string): string {
   return prefix && prefix !== '/' ? prefix : '';
 }
 
+/** `scene-mock://` 是规则操作，不是转发地址。 */
+export function isPluginTarget(input: string): boolean {
+  return /^scene-mock:\/\//i.test(String(input || '').trim());
+}
+
 /**
  * 规范化项目 target：保留协议、host、端口和非根路径。
  * 根路径 `/` 丢掉；空输入返回 ''。允许不写协议（默认补 http://）。
+ * `scene-mock://` 原样保留，表示这条规则只把请求交给插件。
  */
 export function normalizeTarget(input: string): string {
   const value = String(input || '').trim();
   if (!value) {
     return '';
+  }
+  if (isPluginTarget(value)) {
+    const rest = value.replace(/^scene-mock:\/\//i, '').replace(/\/+$/, '');
+    return rest ? `scene-mock://${rest}` : 'scene-mock://';
   }
   const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(value) ? value : `http://${value}`;
   let url: URL;

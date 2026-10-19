@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Form, Input, Modal, Space, Typography, message } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Modal, Typography, message } from 'antd';
+import { HolderOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { api } from '../../api';
 import { ProjectProxy, ProjectSummary, isApiError } from '../../types';
 
-const emptyProxy = { host: undefined, target: undefined };
+const emptyProxy = { host: undefined, target: 'scene-mock://' };
 
 export default function CreateProject({
   list,
@@ -20,6 +20,7 @@ export default function CreateProject({
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const pending = useRef<Record<string, unknown> | null>(null);
+  const dragFrom = useRef<number | null>(null);
 
   useEffect(() => {
     if (!editing) {
@@ -79,10 +80,10 @@ export default function CreateProject({
           name: values.name,
           proxies,
         });
-        message.success('已保存，whistle 规则已同步');
+        message.success('已保存');
       } else {
         await api.createProject({ ...values, proxies });
-        message.success('已创建项目，whistle 规则已同步');
+        message.success('已创建项目');
       }
       close();
       await onSaved();
@@ -123,7 +124,7 @@ export default function CreateProject({
         <Form form={form} layout="vertical">
           {editing && (
             <Typography.Paragraph type="secondary">
-              修改「被代理的域名」会同步重写 whistle 规则。
+              只维护规则，不改 Scene 和接口。
             </Typography.Paragraph>
           )}
           <Form.Item name="name" label="项目名称" rules={[{ required: true }]}>
@@ -157,30 +158,67 @@ export default function CreateProject({
             />
           </Form.Item>
           <Form.List name="proxies">
-            {(fields, { add, remove }) => (
+            {(fields, { add, remove, move }) => (
               <>
                 {fields.map((field, index) => (
-                  <Space key={field.key} align="start" style={{ display: 'flex' }}>
+                  <div
+                    key={field.key}
+                    onDragOver={(event) => {
+                      event.preventDefault();
+                    }}
+                    onDrop={(event) => {
+                      event.preventDefault();
+                      const from = dragFrom.current;
+                      dragFrom.current = null;
+                      if (from == null || from === index) {
+                        return;
+                      }
+                      move(from, index);
+                    }}
+                    style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}
+                  >
+                    <span
+                      role="button"
+                      aria-label={`拖动第 ${index + 1} 条规则`}
+                      draggable
+                      title="拖动排序"
+                      onDragStart={(event) => {
+                        dragFrom.current = index;
+                        event.dataTransfer.effectAllowed = 'move';
+                        event.dataTransfer.setData('text/plain', String(index));
+                      }}
+                      onDragEnd={() => {
+                        dragFrom.current = null;
+                      }}
+                      style={{
+                        cursor: 'grab',
+                        marginTop: index === 0 ? 38 : 8,
+                        color: 'rgba(0, 0, 0, 0.45)',
+                        display: 'inline-flex',
+                      }}
+                    >
+                      <HolderOutlined />
+                    </span>
                     <Form.Item
                       name={[field.name, 'host']}
-                      label={index === 0 ? '被代理的域名' : ''}
-                      tooltip={index === 0 ? '只写域名时匹配该域名下全部请求。域名后可以再写一段路径，只匹配这一段及其子路径。同一域名上，路径更长的一组优先。' : undefined}
-                      style={{ width: 300, marginBottom: 8 }}
-                      rules={[{ required: true, message: '被代理的域名不能为空' }]}
+                      label={index === 0 ? '规则' : ''}
+                      tooltip={index === 0 ? 'Whistle pattern。只写域名时匹配该域名下全部请求。域名后可以再写路径，只匹配这一段及其子路径，例如 example.com/shop/api。同一域名上，路径更长的一组优先。' : undefined}
+                      style={{ width: 320, marginBottom: 8 }}
+                      rules={[{ required: true, message: '规则不能为空' }]}
                     >
                       <Input
-                        placeholder="http://域名/ 或 http://域名/路径"
+                        placeholder="example.com/shop/api"
                         spellCheck={false}
                       />
                     </Form.Item>
                     <Form.Item
                       name={[field.name, 'target']}
-                      label={index === 0 ? '代理到的域名' : ''}
-                      tooltip={index === 0 ? '浏览器里的路径原样转到这个地址。' : undefined}
-                      style={{ width: 300, marginBottom: 8 }}
+                      label={index === 0 ? '操作' : ''}
+                      tooltip={index === 0 ? '原样写进规则右侧。scene-mock:// 把请求交给本插件；http(s) 地址同时作为未命中 Scene 时的转发目标。' : undefined}
+                      style={{ width: 280, marginBottom: 8 }}
                     >
                       <Input
-                        placeholder="http://域名/ 或 http://域名/路径"
+                        placeholder="scene-mock://"
                         spellCheck={false}
                       />
                     </Form.Item>
@@ -190,22 +228,22 @@ export default function CreateProject({
                         onClick={() => remove(field.name)}
                       />
                     )}
-                  </Space>
+                  </div>
                 ))}
                 <Button
                   type="dashed"
                   block
                   icon={<PlusOutlined />}
                   style={{ marginBottom: 12 }}
-                  onClick={() => add({ host: '', target: '' })}
+                  onClick={() => add({ host: '', target: 'scene-mock://' })}
                 >
-                  添加一组
+                  添加一条规则
                 </Button>
               </>
             )}
           </Form.List>
           <Typography.Paragraph type="secondary" style={{ marginBottom: 0 }}>
-            未命中 Scene 时，接口（`/api`，或域名路径下的 `/前缀/api`）回到原始地址；其余请求按浏览器里的路径原样透传到「代理到的域名」。代理目标留空则走全局未命中策略。
+            一行一条规则，复制时按这里的顺序原样带上右侧操作。例如 <Typography.Text code>example.com/shop/api scene-mock://</Typography.Text>。未命中 Scene 时，接口（<Typography.Text code>/api</Typography.Text>，或域名路径下的 <Typography.Text code>/前缀/api</Typography.Text>）回到原始地址；操作是 http(s) 地址时，其余请求按浏览器里的路径转到该地址。操作留空或为 <Typography.Text code>scene-mock://</Typography.Text> 则走全局未命中策略。
           </Typography.Paragraph>
         </Form>
       </Modal>

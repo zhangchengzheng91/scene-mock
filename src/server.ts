@@ -1,7 +1,7 @@
 import { IncomingMessage } from 'http';
 import { headerOf, normalizeHeaders } from './core/normalize';
 import { candidatePathnames, inferHttpMethod, pathnameOf, searchOf } from './core/matcher';
-import { isUpstreamApi } from './core/project';
+import { isPluginTarget, isUpstreamApi } from './core/project';
 import { initContext } from './context';
 
 const HOP_BY_HOP = new Set([
@@ -119,8 +119,8 @@ async function handleHttp(
     return;
   }
 
-  // 未命中：优先项目 target，其次全局 unmatched 策略
-  if (proxy.target) {
+  // 未命中：http(s) 目标才转发。scene-mock:// 只是规则操作，走全局未命中策略。
+  if (proxy.target && !isPluginTarget(proxy.target)) {
     await proxyTo(req, res, proxy.target);
     return;
   }

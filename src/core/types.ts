@@ -60,7 +60,7 @@ export interface SceneDef {
 export interface ProjectProxy {
   /** 规范化后的被代理域名（小写、无协议、无端口；可带路径前缀） */
   host: string;
-  /** 代理到的 origin，可为空（空走全局 unmatched 逻辑） */
+  /** 转发地址；`scene-mock://` 表示只进插件；空则走全局 unmatched */
   target: string;
 }
 

@@ -174,7 +174,7 @@ describe('store', () => {
 
   it('writes whistle rules from matchPatterns and project hosts', async () => {
     const store = await loaded();
-    const text = store.pluginRulesText();
+    const text = store.whistleRulesText();
     assert.match(text, /^\/api\/ scene-mock:\/\/$/m);
     assert.match(text, /^www\.example1\.com scene-mock:\/\/$/m);
     // 新建项目后规则带上新 host（项目 host 一律去端口存储）
@@ -184,7 +184,7 @@ describe('store', () => {
       host: 'http://localhost:8890',
       target: '',
     });
-    const next = store.pluginRulesText();
+    const next = store.whistleRulesText();
     assert.match(next, /^localhost scene-mock:\/\/$/m);
   });
 
@@ -225,7 +225,7 @@ describe('store', () => {
     });
     assert.equal(created.host, 'www.example2.com/cc');
     assert.equal(created.target, 'http://www.example1.com');
-    assert.match(store.pluginRulesText(), /^www\.example2\.com\/cc scene-mock:\/\/$/m);
+    assert.match(store.whistleRulesText(), /^www\.example2\.com\/cc scene-mock:\/\/$/m);
     assert.equal(store.resolveProject('www.example2.com', '/cc')?.id, 'shop');
     assert.equal(store.resolveProject('www.example2.com', '/cc/api')?.id, 'shop');
     assert.equal(store.resolveProject('www.example2.com', '/dd'), null);
@@ -256,13 +256,55 @@ describe('store', () => {
     assert.equal(paired.target, 'http://localhost:8080');
     assert.equal(paired.proxies.length, 2);
     assert.equal(paired.proxies[1].target, 'http://localhost:9090');
-    assert.match(store.pluginRulesText(), /^www\.example2\.com\/cc scene-mock:\/\/$/m);
-    assert.match(store.pluginRulesText(), /^www\.example2\.com scene-mock:\/\/$/m);
+    assert.match(store.whistleRulesText(), /^www\.example2\.com\/cc scene-mock:\/\/$/m);
+    assert.match(store.whistleRulesText(), /^www\.example2\.com scene-mock:\/\/$/m);
     assert.equal(store.matchProxy('www.example2.com', '/cc/login')?.proxy.host, 'www.example2.com/cc');
     assert.equal(store.matchProxy('www.example2.com', '/cc/login')?.proxy.target, 'http://localhost:8080');
     assert.equal(store.matchProxy('www.example2.com', '/static/js/lodash.js')?.proxy.host, 'www.example2.com');
     assert.equal(store.matchProxy('www.example2.com', '/static/js/lodash.js')?.proxy.target, 'http://localhost:9090');
     assert.equal(store.resolveProject('www.example2.com', '/static/js/lodash.js')?.id, 'mobile');
+  });
+
+  it('stores a path rule with scene-mock:// and keeps list order', async () => {
+    const store = await loaded();
+    const created = await store.createProject({
+      id: 'path-rule',
+      name: 'path-rule',
+      proxies: [
+        { host: 'www.example3.com/shop', target: 'http://localhost:8080/shop' },
+        { host: 'www.example3.com/shop/api', target: 'scene-mock://' },
+      ],
+    });
+    assert.equal(created.proxies[1].host, 'www.example3.com/shop/api');
+    assert.equal(created.proxies[1].target, 'scene-mock://');
+    const text = store.whistleRulesText();
+    assert.ok(
+      text.indexOf('www.example3.com/shop scene-mock://')
+      < text.indexOf('www.example3.com/shop/api scene-mock://'),
+    );
+    const updated = await store.updateProject('path-rule', {
+      proxies: [
+        { host: 'www.example3.com/shop/api', target: 'scene-mock://' },
+        { host: 'www.example3.com/shop', target: 'http://localhost:8080/shop' },
+      ],
+    });
+    assert.deepEqual(updated.proxies.map((item) => item.host), [
+      'www.example3.com/shop/api',
+      'www.example3.com/shop',
+    ]);
+    const next = store.whistleRulesText();
+    assert.ok(
+      next.indexOf('www.example3.com/shop/api scene-mock://')
+      < next.indexOf('www.example3.com/shop scene-mock://'),
+    );
+    assert.equal(
+      store.matchProxy('www.example3.com', '/shop/api/v1')?.proxy.target,
+      'scene-mock://',
+    );
+    assert.equal(
+      store.matchProxy('www.example3.com', '/shop/goods')?.proxy.target,
+      'http://localhost:8080/shop',
+    );
   });
 
   it('resolves project by host and passes through unknown hosts', async () => {
